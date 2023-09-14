@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom Styles */
+        .sidebar {
+            position: fixed;
+            height: 100vh;
+            width: 100%;
+            max-width: 240px;
+            background-color: #7f187f;
+            color: #ffffff;
+            /* White for contrast */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar .nav-link {
+            color: #ffffff;
+            /* White when not active */
+        }
+
+        .nav-link.active {
+            background-color: #c98dc5;
+            position: relative;
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid #c98dc5;
+            transform: translateY(-50%);
+        }
+
+
+        /* Main content margin for fixed sidebar */
+        .main-content {
+            margin-left: 240px;
+        }
+
+        .sidebar hr {
+            border-top: 1px solid
+                /* White for visibility against the dark background */
+                width: 90%;
+            /* Sets the width to 90% of the container */
+            margin: 0.5rem auto;
+            /* Centers the hr element, giving it 0.5rem of margin at the top and bottom */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div>
+                    <a href="#" class="text-decoration-none text-reset">
+                        <div class="d-flex align-items-center">
+                            <img src="dashboardLogo.svg" class="mr-2">
+                            <h4 class="mb-0">Dashboard Name</h4>
+                        </div>
+                    </a>
+                    <hr>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active d-flex align-items-center" href="#">
+                                <img src="home.svg" class="mr-2"> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <img src="expectations.svg" class="mr-2"> Expectations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <img src="forms.svg" class="mr-2"> Forms
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <img src="settings.svg" class="mr-2"> Settings
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div>
+                    <hr>
+
+                    <a href="#" class="text-decoration-none text-reset">
+                        <div class="d-flex align-items-center">
+                            <img src="dataVisualizationLogo.svg" class="mr-2">
+                            <p class="mb-0">Contact Data Visualization</p>
+                        </div>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col main-content">
+                <!-- Alerts -->
+                <div class="alert alert-warning alert-dismissible fade show d-none" role="alert">
+                    <strong>Alert!</strong> <span id="alert-message">Something went wrong.</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- App Content -->
+                <div id="app">
+                    <!-- Content will be populated here via JavaScript -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Sample JavaScript code to handle page switching
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // Get references to the sidebar links and the app div
+            const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+            const appDiv = document.getElementById('app');
+
+            // Function to switch pages
+            const switchPage = (page) => {
+                // Clear the app div
+                appDiv.innerHTML = '';
+
+                switch (page) {
+                    case 'Home':
+                        appDiv.innerHTML = '<h1>Home Page</h1>';
+                        break;
+                    case 'Expectations':
+                        appDiv.innerHTML = '<h1>Expectations Page</h1>';
+                        break;
+                    case 'Forms':
+                        appDiv.innerHTML = '<h1>Forms Page</h1>';
+                        break;
+                    case 'Settings':
+                        appDiv.innerHTML = '<h1>Settings Page</h1>';
+                        break;
+                    default:
+                        appDiv.innerHTML = '<h1>404 - Page Not Found</h1>';
+                }
+            }
+
+            // Initialize with the Home page
+            switchPage('Home');
+
+            // Add click event listener to each sidebar link
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Prevent default behavior
+                    e.preventDefault();
+
+                    // Remove active class from all sidebar links
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+
+                    // Add active class to clicked sidebar link
+                    e.currentTarget.classList.add('active');
+
+                    // Switch to the clicked page
+                    const page = e.currentTarget.textContent.trim();
+                    switchPage(page);
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>
