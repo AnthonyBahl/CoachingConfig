@@ -11,7 +11,7 @@
             position: fixed;
             height: 100vh;
             width: 100%;
-            max-width: 240px;
+            max-width: 320px;
             background-color: #7f187f;
             color: #ffffff;
             /* White for contrast */
@@ -46,52 +46,185 @@
 
         /* Main content margin for fixed sidebar */
         .main-content {
-            margin-left: 240px;
+            margin-left: 320px;
         }
 
-        .sidebar hr {
-            border-top: 1px solid
-                /* White for visibility against the dark background */
-                width: 90%;
-            /* Sets the width to 90% of the container */
-            margin: 0.5rem auto;
-            /* Centers the hr element, giving it 0.5rem of margin at the top and bottom */
+        .sidebar svg {
+            margin-right: 0.5rem;
+        }
+
+        .sidebar path {
+            fill: #fff;
+        }
+
+        .sidebar .nav-link.active path {
+            fill: #000;
+        }
+
+        .sidebar .nav-link.active {
+            color: #000;
+        }
+
+        /* Custom styling for the SVG spin animation */
+        #loadingSVG {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="brandLogo" viewbox="0 0 192 192">
+        <g>
+            <image width="192" height="192" preserveAspectRatio="none" style="image-rendering:optimizeQuality"
+                xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAAXNSR0IArs4c6QAAAARnQU1BAACx&#10;jwv8YQUAAAIKUExURdHeXsTVMr/RIb3PGpraim/KWXLMXH7Pao/Xf9XgasTUNr7QHcHSJsPUL8DS&#10;JH/QbHvPZpjZiNbib8rZR7zOFMXVNsbWOZPYgoPScILRb3XMX27KV4jTdsXVN6TelnfNYs3bUcLT&#10;K6jgm8jYQdnke2zJVsbWNcXTOsroGMjEQ5ChinLjXoLTboLQb8TTN8/qLcjaOHw6b2YWfIKjdYTv&#10;bYFAd2oQhnUdfXYZf4GadoTtbYLUb8rfNIA+eGkNh3Yqe3YsfHQZfYKxdNDsLH45eXcre3YqfIJC&#10;doTwbc3nLoTubcziM41ZbXcngITsbZ3bjoGgdoA8eIXwbYxYbbfBTnCVYav2mcyfX20egngsencr&#10;fWEQa5M7pfrVPf/iAcyiO2oZiGkZhXQoemUbaJRGn9p49vrcW/fHAfrSGv/rC8aaP5FDm92F9c9s&#10;6NR86vjPHffOHfrRG9WwM3gse6BQreKJ+tuB8tJ66NV+6tBv6PnUN/jPHPjOHGscg9Fx6fjIBP/t&#10;Cmwch2cdatqA8dN76dFy6Xkte9+G99yC9NSxMteyMWsah/rRGsmePZhJotayMdWzMfnQHqFRrvrZ&#10;StJ06ffKC/jOGNR66s5p5/jKBvjNG/jNDvvictN36vjNFPzkf/jPGvnSJtayMJdIoNZ/6vnSL/ve&#10;Y/rRHcWYJf/2YfvfZ/vgbMxj5wAAAN4Uo0wAAACudFJOU///////////////////////////////&#10;////////////////////////////////////////////////////////////////////////////&#10;////////////////////////////////////////////////////////////////////////////&#10;////////////////////////////////////////////////APxmpecAAAAJcEhZcwAADsMAAA7D&#10;AcdvqGQAAAtfSURBVHhe7Zr9WxTXFcdhCSCw7FIjMKC40kRJ35YmajQ2vps0JI2Nfa8J9S1CiAKm&#10;beou6G7SlNokmoYiCysuIbXaNmb+x5575+7O7DAz55y783SePM98fkJk2POZe753zt2lyfyGEwtE&#10;TSwQNbFA1MQCURMLRE0sEDWxQNTEAlETC0RNLBA1sUDUxAJREwtETSwQNbFA1IQk0NScaGlWXxN4&#10;orWtfYv6ukFCEOjo7GpJdjc3p1LqGyhbWtPpdE9bW/u31DcaoEGBrU8mt3V190r6kkSD/lZjQJIe&#10;3D644wn1XU0aEYC+2ZZo7huy6geDRK/6n0B2bjeUwAB8kWlt62mkm3QFdg2nEonhTrt6QV+CsAb9&#10;dv0C+Ed7ZjDTs+Pb6v+Z6Ag0dScSqWR371Bd9cBQH56DLa0DzvoFhmGkezKZQa2V4Ap0PJWCxHY3&#10;b65e0pdMqh/0AfrfXb8Evptuh1wb3FxzBJ7eNdzSNaxK9QExqOXXj/ZM6+COneqnKZAFOkRiu4e8&#10;b7yDwC7q367q9Ieba6pAx7bh3vrE+hGwm25pQ+6/BWSivbVdXYNBFWhO9qkCUXzXwLX/BGEYu9VF&#10;GFSBhKqOgk8O+jfvP/4Y24lBIAo8vY28AIBnF6H5rcPo2aGuQyAK7Ooi9X8Vjy7awqofGFQXIhAF&#10;hrtZAkN9iT3qSsXO3Yz+ERit6koEosA2Vv2Aa6pg5LdKhvZIowl08DpI0JdyJJmVX0V6QF0cDE3g&#10;qWG2gHMvYve/pE1dHQxNIKWKYlFLMm//qUFLMU2gRdXEQ50PHPM/ix7SUYck0JRUJTGRSe7frVf/&#10;QHuPevlASALd6tDIZuSZ73z3e9//gaqISZrUQySBhKZAdvSHzz63d5+uQYZySKMJNKuKWHR2jo7s&#10;f/7AwRcO/UjLwMhQpgmKwK4UfxMFsqMvHj5y9NjxgycODegYGD2UEFAEupM6AtmTI6eef+nll4/B&#10;Guh1ESkEFIGUTgSg//cfgfrB4PhBvRwYYQkkNBYA6v+xuP/S4MDBva9odJGRIRwsCQJNGgKdY5Df&#10;Y1b9VhdpJNmgPAkIAnv4gxDk95TVPxYiya/yu8ggjEMEgUQnVyA79tpPjhx1CIDB6ydOs7vIaP2p&#10;qsEfXGAr6zQpsPNrA2vwxivcNaA8CXCBJ7lnAZnfuvsvOHb8wN597DXAewgXSDIfw9mxvjPV/ccJ&#10;JPmN08w1MLarIvzBBZgdlB197fCR2v7jRCPJxiAaAlRgawurg2R+VcVuRJKZU0U7eq5EBYZYj+Hs&#10;6MjhIy95NJAE1uAF5hqg702gAl2qNBKQ3zP1+2c9Yqrg7UVoilEBzmkye9KeH7wRSX6V80xG36bG&#10;BBinyU6rf1SpPoipgmOQxqYJTGAPPQIwP0D/qEJ9EXvRIXoXoSM1JkA/jMn533P/rEesAWO6ziDv&#10;UmMCLVQBr/nBGzFV0A0yyJsrmEBzivYcg/zuD86vjUjyz4jPgzT2QQcmYCZJBpBfcv1WF5FyYKQb&#10;fw6YqQRu4J7/McDgBGEvMtD7TxEwexPYp3uQX8/5zR+ZZMzASOOzHEXATCFdBPlF9383IsnIM5ly&#10;/2kCZirwI8rs6J79m+d/DJHk4PNBujW0d+bMZIBBdsx6/4eL6KLT/l1E6h+AJiCS7JMDmP/PcPvH&#10;QjyTfZMM9dP+fIUo4NtFMP//PGj+DCLgfGAM7A73c2K/JMP+r3n/BbAG3lMFtX8AsoBnDrIn+07p&#10;3n8BGHi+Z5feTf7zJ7qAh0F2jD4/eCP2ok1JJve/gCHgnipg/ofze0P1SwN3kmH/p9fPEjATdVNF&#10;duxFyK8qRBuR5LpzMuv+MwXEVKGqF/0/csr7/RMeriTTnr82PAHHXiTn/4bvv0BMFTUDbv1cgVqS&#10;OfM/hmOqYPYPwBVQayA/vwupfmlgnQ8I878btoA8H3Dnfww1VfD2Hwu+gDmUGGHP/xhiDfYxnr82&#10;GgJm6hn+/I8hk8zMr0RHwPzFs+Hef8GxA8d/+Sv1+zloCfz6ud/8Vr1uaJw9+uZb6tez0BEY/925&#10;8xdCNjh78dLbly+rF+CgITAx+c7Uu+fDXYOzRy9duXp1eka9BAO+wPjk7LX3pn5//sIf1IuHANz/&#10;P77/p+u5fF69CB22wNzk/Oz8DbEGN8MzuHjpCtQ/M5MrFNTLkOEKjBdnZ+fn52+898G5D8MyOHvx&#10;z29f/egvM0BugWvAFID6oXzgmjC48FdVQkOI/N76G9x/acBdA57AhOifmsG7oexFUP+VWv1gkOcl&#10;mSUwNyn7xwKS/PHrjSdZ5vejWv3CgJVkjsC4ff8F196Z+uTThnMg9x/Z/1V4XcQQUPm1uXF76k6j&#10;SYb+d9XPTDJdoJZfG5HkhtYA9p/Pbjn7x4JjQBao6/8qkIM7DSRZ7D9y/3fDyAFVYFP/WIDB37WT&#10;vCm/NrkFqgFRAOYHr/plkj/XnCpk/e7+r5LLL6iXRqAJ+NYvnslTd/RyAM9f3/rFGtAMSAJzxUVV&#10;rgfQRTpTBdz/z3z6x4KYZIqAx/7jROxF7CSL/N7yyq8N7XlAEHDMD97AGnDPB1D/lav2/OANaarA&#10;BQL6vwoY8M4HUP8/AvvHgrKbogJy/scQ5wNOkuX875tfG0IOMIEl7/3fDet84Jj/MXKFu6oQPzCB&#10;5ZIqEUFOFbQki/y+j/V/lZVVVYgfmECZKCAMaEmG87t9fkFZwXoIE7hHFRBJ/piQZLj/fvODFytY&#10;jDGBuTVVHw5MFYQkU/OruN6owP2yKo8AnA+wJDPya1HJqUL8wATMZcompLh2GzkfyPmf3P+ChrdR&#10;c50cAgByEHQ+kPtP8PzgBtuEcIGlMmMJhMHnvucDZn4F6CaEC3wxGTCJbkaeD7y7SNbPyK8AH6lR&#10;AbO4oWqj4X8+CJ7/vUE7iCDwJSfGAHSR114E9z94/vciF4bAEq+HhIHH+UDkF5n/PahUVBH+4ALc&#10;HgKD+al/upIM9VPmZxe5aVVCAASBtXVeD4HBbTgf3HR8jGbVz+x/UgdRBMaZIQDc5wO5/7PrJ2yi&#10;JIH7rCeBhchBLcnw/H1wi3//Z2bu/kuVEABBgD5SOxB7kTofQP88IM//dVDe3KIIrK/xl0CsgXU+&#10;4M3/dYQl8JAfAgDWQJz09fYfSYXy1hZF4FGZu5FKrPPBUd7872RhRRUQBEWAfDB2AVPFuZtvPmDN&#10;/04IexBR4N66KonJtX9/8J+3Ll/V6h/CaVJCEmCcK+tYvFf8r3l5OqcqYlIJT4BzrnSwWJr8Aq7O&#10;5fUMsHeELEgC5rIqicXshqzfNAsFLQPSAhAFFjVCMLtR/EpdvrCgY0AYhACaAO9cKYH6H6urwUBj&#10;DVZC/IADRmquAPR/9f4LCvwc0CJAFShv8AxUfm34SaZ1EFWAea6cLU2qC2uwkxyuwCPeuXKjrn8s&#10;CrwkE06TEqKAOclYAcf+44SXZMJpUkIVYJwrXfm14SQ597W6CIMqMF6cXaQpzN4oPlIXucmTuyi3&#10;EPYKmKXJ4vIG4eMmj/za5GlrUJn+mlo/XcA0J74sF5fX55GzQak4oX7eC3wvWrk7vUrMr4QhIBjf&#10;WC6vrZd8lwLuv3f/VwmaKlYqd/PTxD+RqMEUAB6P3xMS4LBZYrHkmB+88UtyZaGg8VejOgKCiYfr&#10;5TK0kyvXvvuPk00GORh78nnS+dEDPQHBV3Nrxfpcb5ofvJmpM8hVplcL2OdIAegLCJYWy5Pl6hOi&#10;Nv9j2GuwsrDKSqwHjQkA95dml4trpdLGRsnz+evFQmFmZeV6Jb9KOrYH07CA4PHD0nK5jObXprJa&#10;yDfSNw5CERBMLKkv/s+EJhAVsUDUxAJREwtETSwQNbFA1MQCURMLRE0sEDWxQNTEAlETC0RNLBA1&#10;sUDUxAJR8w0XMM3/AduhCb7BHcY4AAAAAElFTkSuQmCC&#10;"
+                id="image1" />
+        </g>
+    </symbol>
+    <symbol id="logo" viewbox="0 0 200 200">
+        <g transform="matrix(8.83 0 0 8.83 100 100)" id="ZHlkTKls9lvR4-O4d21DS">
+            <path
+                style="stroke: #fff; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)"
+                d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1.01545 0 0 3.92935 163.5 135.5)" id="h_TrMIctlVfK5yyvwP8tU">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)"
+                d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1.01545 0 0 2.649 36.5 150)" id="-vWrElWgkcCt6sxrS86T5">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)"
+                d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1.01545 0 0 3.84105 79.5 136.5)" id="d7sjCAUHW0QN7WmqSF28y">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)"
+                d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1.01545 0 0 2.78145 124.5 148.5)" id="_oAW82qNvSaF1pyV6IG9u">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)"
+                d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1 0 0 1 36.5 74.5)" id="XNiL84LIM2Yk2wNau2tIW">
+            <path
+                style="stroke: #fff; stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(-11.5, -11.5)"
+                d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1 0 0 1 79.5 47.5)" id="3fmue0fhQHqd5YNQEBD3v">
+            <path
+                style="stroke: #fff; stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(-11.5, -11.5)"
+                d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1 0 0 1 124.5 71.5)" id="SsrRG1xZPlUQKRDOoSGBO">
+            <path
+                style="stroke: #fff; stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(-11.5, -11.5)"
+                d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(1 0 0 1 163.5 45.5)" id="wD5b-AjIXHkCzOZGRdYc-">
+            <path
+                style="stroke: #fff; stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(-11.5, -11.5)"
+                d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
+                stroke-linecap="round" />
+        </g>
+        <g transform="matrix(0.202985561 0.2419087715 -1.0885894718 0.9134350243 59 59.5)" id="PYXFZDmJJrmoYcttz8t3Z">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z" stroke-linecap="round" />
+        </g>
+        <g transform="matrix(0.1719912742 -0.2648433372 1.1917950176 0.773960734 103 56.5)" id="9enGxf-92aoJsggBcBb7g">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z" stroke-linecap="round" />
+        </g>
+        <g transform="matrix(0.202985561 0.2419087715 -1.0885894718 0.9134350243 144 58.5)" id="EVg2V69V2hcmZC3y5QRxq">
+            <path
+                style="stroke: #fff; fill: #fff; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
+                transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z" stroke-linecap="round" />
+        </g>
+    </symbol>
+</svg>
 
 <body>
+
+
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
             <nav class="sidebar">
                 <div>
                     <a href="#" class="text-decoration-none text-reset">
-                        <div class="d-flex align-items-center">
-                            <img src="dashboardLogo.svg" class="mr-2">
-                            <h4 class="mb-0">Dashboard Name</h4>
+                        
+                        <div class="d-flex align-items-center" style="margin-left: 0.5rem; margin-top: 0.5rem; margin-right: 0.5rem;">
+
+                            <svg width="30" height="30">
+                                <use xlink:href="#logo" />
+                            </svg>
+                            <h4 class="mb-0">Coaching Configuration</h4>
                         </div>
                     </a>
                     <hr>
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active d-flex align-items-center" href="#">
-                                <img src="home.svg" class="mr-2"> Home
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path
+                                        d="M240-200h133.847v-237.692h212.306V-200H720v-360L480-740.769 240-560v360Zm-59.999 59.999v-449.998L480-815.767l299.999 225.768v449.998H526.154v-237.693h-92.308v237.693H180.001ZM480-470.385Z" />
+                                </svg>
+                                Home
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center" href="#">
-                                <img src="expectations.svg" class="mr-2"> Expectations
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path
+                                        d="M206.924-170.001v-282.308h-80v-59.998h219.998v59.998h-80v282.308h-59.998Zm0-437.692v-182.306h59.998v182.306h-59.998Zm163.077 0v-59.998h80v-122.308h59.998v122.308h80v59.998H370.001Zm80 437.692v-342.306h59.998v342.306h-59.998Zm243.077 0v-122.308h-80v-59.998h219.998v59.998h-80v122.308h-59.998Zm0-277.692v-342.306h59.998v342.306h-59.998Z" />
+                                </svg>
+                                Expectations
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center" href="#">
-                                <img src="forms.svg" class="mr-2"> Forms
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path
+                                        d="M322.335-289.231q15.05 0 25.203-10.181 10.154-10.181 10.154-25.231 0-15.05-10.181-25.203Q337.331-360 322.281-360t-25.204 10.181q-10.153 10.18-10.153 25.23t10.18 25.204q10.181 10.154 25.231 10.154Zm0-155.385q15.05 0 25.203-10.18 10.154-10.181 10.154-25.231 0-15.05-10.181-25.204-10.18-10.153-25.23-10.153t-25.204 10.18q-10.153 10.181-10.153 25.231 0 15.05 10.18 25.204 10.181 10.153 25.231 10.153Zm0-155.384q15.05 0 25.203-10.181 10.154-10.18 10.154-25.23t-10.181-25.204q-10.18-10.154-25.23-10.154t-25.204 10.181q-10.153 10.181-10.153 25.231 0 15.05 10.18 25.203Q307.285-600 322.335-600Zm121.511 305.384h227.692v-59.999H443.846v59.999Zm0-155.385h227.692v-59.998H443.846v59.998Zm0-155.384h227.692v-59.999H443.846v59.999ZM212.309-140.001q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h535.382q30.308 0 51.308 21t21 51.308v535.382q0 30.308-21 51.308t-51.308 21H212.309Zm0-59.999h535.382q4.616 0 8.463-3.846 3.846-3.847 3.846-8.463v-535.382q0-4.616-3.846-8.463-3.847-3.846-8.463-3.846H212.309q-4.616 0-8.463 3.846-3.846 3.847-3.846 8.463v535.382q0 4.616 3.846 8.463 3.847 3.846 8.463 3.846ZM200-760V-200-760Z" />
+                                </svg>
+                                Forms
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center" href="#">
-                                <img src="settings.svg" class="mr-2"> Settings
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                    <path class="fill-wayPurple-dark-contrast"
+                                        d="M583.077-63.079q-23.077 0-39.23-16.153-16.154-16.154-16.154-39.231v-258.46q0-23.077 16.154-39.23 16.153-16.154 39.23-16.154h258.46q23.077 0 39.231 16.154 16.153 16.153 16.153 39.23v258.46q0 23.077-16.153 39.23-16.154 16.154-39.231 16.154h-258.46Zm0-55.384h258.46v-29.692q-23.077-28.692-56.384-45.654-33.308-16.961-72.846-16.961-39.538 0-72.846 16.961-33.307 16.962-56.384 45.654v29.692Zm129.23-129.23q23.077 0 39.231-16.154 16.153-16.153 16.153-39.23 0-23.077-16.153-39.231-16.154-16.153-39.231-16.153t-39.23 16.153q-16.154 16.154-16.154 39.231t16.154 39.23q16.153 16.154 39.23 16.154ZM480-480Zm.461-119.999q-49.922 0-84.96 35.038-35.038 35.039-35.038 84.961 0 39.922 21.807 70.153 21.808 30.23 57.73 43.076v-67.69q-8.769-8-14.154-20.885-5.385-12.885-5.385-24.654 0-25 17.5-42.5t42.5-17.5q14 0 25.193 5.5 11.192 5.5 19.192 14.5h68.075q-12.23-35.538-42.576-57.768-30.346-22.231-69.884-22.231Zm-92.767 499.998-15.231-121.846q-16.077-5.385-32.962-15.077-16.885-9.693-30.193-20.77l-112.846 47.692L104.156-370l97.615-73.769q-1.385-8.923-1.962-17.923-.577-9-.577-17.923 0-8.539.577-17.347.577-8.808 1.962-19.269L104.156-590l92.306-159.229 112.461 47.308q14.462-11.462 30.885-20.962 16.424-9.501 32.27-15.27l15.616-121.846h184.612l15.231 122.231q18 6.538 32.578 15.269 14.577 8.731 29.423 20.578l114-47.308L855.844-590l-88.077 66.923q.385.769.385 1.538 0 .77.384 1.539h-74.075q-1-5-1.807-9.923-.808-4.923-2.808-9.923L777.385-606 738-674l-100.539 42.385q-20.076-21.462-48.115-37.923-28.039-16.462-56.731-23.308L520-800h-79.385l-13.23 106.769q-30.616 7.231-56.539 22.154-25.923 14.923-49.461 38.462L222-674l-39.385 68L269-541.615q-5 14.23-7 29.615-2 15.385-2 32.385Q260-464 262-449q2 15 6.615 29.615l-86 65.385L222-286l99-42q24 24.615 54.192 41.038 30.193 16.423 64.808 22.577v164.384h-52.306Z" />
+                                </svg>
+                                Settings
                             </a>
                         </li>
                     </ul>
@@ -102,27 +235,33 @@
 
                     <a href="#" class="text-decoration-none text-reset">
                         <div class="d-flex align-items-center">
-                            <img src="dataVisualizationLogo.svg" class="mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                <path class="fill-wayPurple-dark-contrast"
+                                    d="m500.001-114.618-6.153-105.383H460q-133.538 0-226.768-93.231-93.231-93.23-93.231-226.768t93.231-226.768q93.23-93.231 226.768-93.231 66.769 0 124.807 24.962 58.038 24.961 101.654 68.576 43.615 43.616 68.576 101.654Q779.999-606.769 779.999-540q0 68.076-21.231 130.73-21.231 62.653-58.346 117.23-37.115 54.576-88.499 99.692-51.384 45.115-111.922 77.73ZM560-226q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-99.846-103.078q14.692 0 24.961-10.269 10.269-10.269 10.269-24.961 0-14.692-10.269-24.961-10.269-10.269-24.961-10.269-14.692 0-24.961 10.269-10.269 10.269-10.269 24.961 0 14.692 10.269 24.961 10.269 10.269 24.961 10.269Zm-23.23-121.999h47.691q.769-27.308 7.731-40.462 6.961-13.154 37.808-44 17.615-17.615 28.653-37.076 11.039-19.462 11.039-43.077 0-47.154-32.192-72.269-32.193-25.115-76.885-25.115-40.538 0-68.422 22.384-27.885 22.385-39.885 53.923l44.461 17.384q6.538-17.385 21.308-32.923 14.769-15.538 42.538-15.538 30.462 0 45.308 16.73 14.847 16.731 14.847 36.655 0 18.538-10.193 32.23-10.192 13.693-25.346 28.847-31.923 27.692-40.192 46.538-8.269 18.846-8.269 55.769ZM460-513Z" />
+                            </svg>
                             <p class="mb-0">Contact Data Visualization</p>
                         </div>
                     </a>
                 </div>
             </nav>
-
-            <!-- Main Content -->
             <main class="col main-content">
-                <!-- Alerts -->
-                <div class="alert alert-warning alert-dismissible fade show d-none" role="alert">
-                    <strong>Alert!</strong> <span id="alert-message">Something went wrong.</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- App Content -->
                 <div id="app">
-                    <!-- Content will be populated here via JavaScript -->
+                    <!-- App Content -->
                 </div>
             </main>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body text-center">
+                    <svg id="loadingSVG" xmlns="http://www.w3.org/2000/svg" height="50" viewBox="0 0 50 50" width="50">
+                        <use xlink:href="#brandLogo" />
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -180,6 +319,28 @@
                     switchPage(page);
                 });
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+
+            // Function to show the loading overlay
+            const showLoading = () => {
+                loadingModal.show();
+            };
+
+            // Function to hide the loading overlay
+            const hideLoading = () => {
+                loadingModal.hide();
+            };
+
+            // Test the functions
+            showLoading();
+
+            // Hide the overlay after 5 seconds (just for demo purposes)
+            setTimeout(() => {
+                hideLoading();
+            }, 5000);
         });
 
     </script>
