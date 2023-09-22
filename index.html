@@ -1,230 +1,929 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,  initial-scale=1.0">
-    <title>Coaching Config Manager</title>
-    <link href="stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
-    <style>
-
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
-</head>
-
-<body>
-    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-        <symbol id="logo" viewbox="0 0 200 200">
-            <g transform="matrix(8.83 0 0 8.83 100 100)" id="ZHlkTKls9lvR4-O4d21DS">
-                <path class="svg-stroke"
-                    style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)"
-                    d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1.01545 0 0 3.92935 163.5 135.5)" id="h_TrMIctlVfK5yyvwP8tU">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)"
-                    d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1.01545 0 0 2.649 36.5 150)" id="-vWrElWgkcCt6sxrS86T5">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)"
-                    d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1.01545 0 0 3.84105 79.5 136.5)" id="d7sjCAUHW0QN7WmqSF28y">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)"
-                    d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1.01545 0 0 2.78145 124.5 148.5)" id="_oAW82qNvSaF1pyV6IG9u">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)"
-                    d="M -11.32503 -11.32503 L 11.32503 -11.32503 L 11.32503 11.32503 L -11.32503 11.32503 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1 0 0 1 36.5 74.5)" id="XNiL84LIM2Yk2wNau2tIW">
-                <path class="svg-stroke"
-                    style="stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(-11.5, -11.5)"
-                    d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1 0 0 1 79.5 47.5)" id="3fmue0fhQHqd5YNQEBD3v">
-                <path class="svg-stroke"
-                    style="stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(-11.5, -11.5)"
-                    d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1 0 0 1 124.5 71.5)" id="SsrRG1xZPlUQKRDOoSGBO">
-                <path class="svg-stroke"
-                    style="stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(-11.5, -11.5)"
-                    d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(1 0 0 1 163.5 45.5)" id="wD5b-AjIXHkCzOZGRdYc-">
-                <path class="svg-stroke"
-                    style="stroke-width: 6; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(-11.5, -11.5)"
-                    d="M 11.5 0 C 17.848 0 23 5.152 23 11.5 C 23 17.848 17.848 23 11.5 23 C 5.152 23 0 17.848 0 11.5 C 0 5.152 5.152 0 11.5 0 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(0.202985561 0.2419087715 -1.0885894718 0.9134350243 59 59.5)"
-                id="PYXFZDmJJrmoYcttz8t3Z">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(0.1719912742 -0.2648433372 1.1917950176 0.773960734 103 56.5)"
-                id="9enGxf-92aoJsggBcBb7g">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z"
-                    stroke-linecap="round" />
-            </g>
-            <g transform="matrix(0.202985561 0.2419087715 -1.0885894718 0.9134350243 144 58.5)"
-                id="EVg2V69V2hcmZC3y5QRxq">
-                <path class="svg-stroke svg-fill"
-                    style="stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                    transform=" translate(0, 0)" d="M -9.5 -9.5 L 9.5 -9.5 L 9.5 9.5 L -9.5 9.5 z"
-                    stroke-linecap="round" />
-            </g>
-        </symbol>
-    </svg>
-    <header class="navbar sticky-top bg-wayPurple-dark flex-md-nowrap p-2 shadow" data-bs-theme="dark">
-        <svg class="bi pe-none me-3 ms-2" width="30" height="30">
-            <use xlink:href="#logo" />
-        </svg>
-        <a class="navbar-brand text-wayPurple-dark-contrast" href="#">Coaching Configuration</a>
-    </header>
-    
-    <div class="offcanvas offcanvas-start show" id="sidebar" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false">
-        <div class="offcanvas-body">
-          <nav class="nav flex-column">
-            <a class="nav-link active" href="#">Active</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-          </nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <h4>All Expectations</h4>
         </div>
-      </div>
-      
-      <div class="container-fluid" style="margin-left: 250px;">
-        <h1>Main Content</h1>
-        <!-- Add your main content here -->
-      </div>
-    
-
-    <!-- <main class="d-flex flex-nowrap">        
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-wayPurple" style="width: 280px;">
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M240-200h133.847v-237.692h212.306V-200H720v-360L480-740.769 240-560v360Zm-59.999 59.999v-449.998L480-815.767l299.999 225.768v449.998H526.154v-237.693h-92.308v237.693H180.001ZM480-470.385Z" />
-                        </svg>
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M100.001-180.001v-121.536h121.536v121.536H100.001Zm216.922 0v-121.536h543.076v121.536H316.923ZM100.001-419.232v-121.536h121.536v121.536H100.001Zm216.922 0v-121.536h543.076v121.536H316.923ZM100.001-658.463v-121.536h121.536v121.536H100.001Zm216.922 0v-121.536h543.076v121.536H316.923Z" />
-                        </svg>
-                        Expectations
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast text-primary-hover">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M140.001-440v-307.691q0-30.308 21-51.308t51.308-21H440V-440H140.001Zm240-59.999Zm139.999-320h227.691q30.308 0 51.308 21t21 51.435V-600H520v-219.999Zm0 679.998V-520h299.999v307.691q0 30.308-21 51.308t-51.308 21H520ZM140.001-360H440v219.999H212.309q-30.308 0-51.308-21t-21-51.435V-360Zm240 59.999Zm199.998-359.998Zm0 199.998ZM200-499.999h180.001V-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v247.692Zm379.999-160H760v-87.692q0-5.385-3.462-8.847-3.462-3.462-8.847-3.462H579.999v100.001Zm0 199.998V-200h167.692q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847v-247.692H579.999ZM200-300.001v87.692q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h167.692v-100.001H200Z" />
-                        </svg>
-                        Browse Expectations
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M212.309-140.001q-29.923 0-51.115-21.193-21.193-21.192-21.193-51.115v-535.382q0-29.923 21.193-51.115 21.192-21.193 51.115-21.193h178q3.769-33.307 29.076-56.653 25.308-23.347 60.615-23.347 35.692 0 60.999 23.347 25.308 23.346 28.692 56.653h178q29.923 0 51.115 21.193 21.193 21.192 21.193 51.115v252.998Q805.23-501 790.422-505.384q-14.807-4.385-30.422-7v-235.307q0-4.616-3.846-8.463-3.847-3.846-8.463-3.846H212.309q-4.616 0-8.463 3.846-3.846 3.847-3.846 8.463v535.382q0 4.616 3.846 8.463 3.847 3.846 8.463 3.846h234.307q2.23 16.615 6.615 31.422 4.384 14.808 10.692 28.577H212.309ZM200-240v40V-760-512.384v-3V-240Zm90.001-54.616h160.692q2.615-15.615 7.769-30.423 5.154-14.807 11.231-29.576H290.001v59.999Zm0-155.385h253.616q25.846-21.922 55.152-36.73 29.307-14.807 62.768-21.038v-2.23H290.001v59.998Zm0-155.384h379.998v-59.999H290.001v59.999ZM480-786.154q13 0 21.5-8.5t8.5-21.5q0-13-8.5-21.5t-21.5-8.5q-13 0-21.5 8.5t-8.5 21.5q0 13 8.5 21.5t21.5 8.5Zm240 728.46q-74.922 0-127.461-52.538-52.538-52.538-52.538-127.46 0-74.923 52.538-127.461Q645.078-417.691 720-417.691t127.461 52.538q52.538 52.538 52.538 127.461 0 74.922-52.538 127.46Q794.922-57.694 720-57.694ZM702.308-120h35.384v-100h100v-35.384h-100v-100h-35.384v100h-100V-220h100v100Z" />
-                        </svg>
-                        Add Expectation
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M172.309-140.001q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h615.382q30.308 0 51.308 21t21 51.308v535.382q0 30.308-21 51.308t-51.308 21H172.309Zm0-59.999h615.382q4.616 0 8.463-3.846 3.846-3.847 3.846-8.463v-535.382q0-4.616-3.846-8.463-3.847-3.846-8.463-3.846H172.309q-4.616 0-8.463 3.846-3.846 3.847-3.846 8.463v535.382q0 4.616 3.846 8.463 3.847 3.846 8.463 3.846Zm37.692-90.001h179.998v-59.998H210.001v59.998ZM582-374.232 765.768-558 723-600.768l-141 142-57-57L483.232-473 582-374.232Zm-371.999-75.769h179.998v-59.998H210.001v59.998Zm0-160h179.998v-59.998H210.001v59.998ZM160-200V-760-200Z" />
-                        </svg>
-                        Forms
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M583.077-63.079q-23.077 0-39.23-16.153-16.154-16.154-16.154-39.231v-258.46q0-23.077 16.154-39.23 16.153-16.154 39.23-16.154h258.46q23.077 0 39.231 16.154 16.153 16.153 16.153 39.23v258.46q0 23.077-16.153 39.23-16.154 16.154-39.231 16.154h-258.46Zm0-55.384h258.46v-29.692q-23.077-28.692-56.384-45.654-33.308-16.961-72.846-16.961-39.538 0-72.846 16.961-33.307 16.962-56.384 45.654v29.692Zm129.23-129.23q23.077 0 39.231-16.154 16.153-16.153 16.153-39.23 0-23.077-16.153-39.231-16.154-16.153-39.231-16.153t-39.23 16.153q-16.154 16.154-16.154 39.231t16.154 39.23q16.153 16.154 39.23 16.154ZM480-480Zm.461-119.999q-49.922 0-84.96 35.038-35.038 35.039-35.038 84.961 0 39.922 21.807 70.153 21.808 30.23 57.73 43.076v-67.69q-8.769-8-14.154-20.885-5.385-12.885-5.385-24.654 0-25 17.5-42.5t42.5-17.5q14 0 25.193 5.5 11.192 5.5 19.192 14.5h68.075q-12.23-35.538-42.576-57.768-30.346-22.231-69.884-22.231Zm-92.767 499.998-15.231-121.846q-16.077-5.385-32.962-15.077-16.885-9.693-30.193-20.77l-112.846 47.692L104.156-370l97.615-73.769q-1.385-8.923-1.962-17.923-.577-9-.577-17.923 0-8.539.577-17.347.577-8.808 1.962-19.269L104.156-590l92.306-159.229 112.461 47.308q14.462-11.462 30.885-20.962 16.424-9.501 32.27-15.27l15.616-121.846h184.612l15.231 122.231q18 6.538 32.578 15.269 14.577 8.731 29.423 20.578l114-47.308L855.844-590l-88.077 66.923q.385.769.385 1.538 0 .77.384 1.539h-74.075q-1-5-1.807-9.923-.808-4.923-2.808-9.923L777.385-606 738-674l-100.539 42.385q-20.076-21.462-48.115-37.923-28.039-16.462-56.731-23.308L520-800h-79.385l-13.23 106.769q-30.616 7.231-56.539 22.154-25.923 14.923-49.461 38.462L222-674l-39.385 68L269-541.615q-5 14.23-7 29.615-2 15.385-2 32.385Q260-464 262-449q2 15 6.615 29.615l-86 65.385L222-286l99-42q24 24.615 54.192 41.038 30.193 16.423 64.808 22.577v164.384h-52.306Z" />
-                        </svg>
-                        Manage Coaching Forms
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M549.999-369.231q14.692 0 25.654-10.962 10.961-10.961 10.961-25.653 0-14.693-10.961-25.654-10.962-10.961-25.654-10.961T524.346-431.5q-10.962 10.961-10.962 25.654 0 14.692 10.962 25.653 10.961 10.962 25.653 10.962Zm-23.845-120.308h47.691q.769-27.076 6.962-40.192 6.192-13.115 29.346-35.5 27.692-26.538 37.692-44.846 10-18.307 10-42.538 0-42.692-30.154-70.423t-77.692-27.731q-37.153 0-65.345 20.5-28.193 20.5-40.962 55.038l43.23 18.154q10.154-24.231 26.039-36.346 15.884-12.116 37.038-12.116 26.308 0 43.231 15.231 16.924 15.231 16.924 40.154 0 15.154-8.577 28.424-8.577 13.269-29.731 32.654-29.154 25.538-37.423 42.999-8.269 17.462-8.269 56.538ZM322.308-260.001q-30.308 0-51.307-21-21-21-21-51.308v-455.382q0-30.308 21-51.308 20.999-21 51.307-21h455.383q30.307 0 51.307 21 21 21 21 51.308v455.382q0 30.308-21 51.308t-51.307 21H322.308Zm0-59.999h455.383q4.615 0 8.462-3.846 3.846-3.847 3.846-8.463v-455.382q0-4.616-3.846-8.463-3.847-3.846-8.462-3.846H322.308q-4.616 0-8.462 3.846-3.847 3.847-3.847 8.463v455.382q0 4.616 3.847 8.463 3.846 3.846 8.462 3.846ZM182.309-120.003q-30.307 0-51.307-21-21-21-21-51.307v-515.381h59.999v515.381q0 4.616 3.846 8.462 3.847 3.847 8.462 3.847h515.382v59.998H182.309ZM309.999-800v480-480Z" />
-                        </svg>
-                        Manage Form Questions
-                    </a>
-                </li>
-                <hr class="bg-primary">
-                <li>
-                    <a href="#" class="nav-link text-wayPurple-contrast">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path class="svg-fill"
-                                d="M680-280q25 0 42.5-17.5T740-340q0-25-17.5-42.5T680-400q-25 0-42.5 17.5T620-340q0 25 17.5 42.5T680-280Zm0 120q31.385 0 57.192-14.308 25.808-14.307 42.193-38.307Q757-226 732-233q-25-7-52-7t-52 7q-25 7-47.385 20.385 16.385 24 42.193 38.307Q648.615-160 680-160Zm-200 59.229q-129.769-35.384-214.884-152.768Q180.001-370.924 180.001-516v-230.153L480-858.46l299.999 112.307v226.616q-14-5.693-29.384-10.269-15.385-4.577-30.615-7.193v-167.386L480-794l-240 89.615V-516q0 53.154 15 103.808 15 50.655 41.347 94.693 26.346 44.039 62.962 79.077t79.462 55.961l1.154-.384q7.923 21.999 20.538 42.152 12.615 20.153 28.691 36.614-2.538.77-4.577 1.654-2.038.885-4.577 1.654Zm200 .77q-74.922 0-127.461-52.538Q500.001-205.078 500.001-280t52.538-127.461Q605.078-459.999 680-459.999t127.461 52.538Q859.999-354.922 859.999-280t-52.538 127.461Q754.922-100.001 680-100.001ZM480-488.23Z" />
-                        </svg>
-                        Admin
-                    </a>
-                </li>
-            </ul>
-            <hr class="bg-primary">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-wayPurple-contrast text-decoration-none">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path class="svg-fill"
-                        d="m500.001-114.618-6.153-105.383H460q-133.538 0-226.768-93.231-93.231-93.23-93.231-226.768t93.231-226.768q93.23-93.231 226.768-93.231 66.769 0 124.807 24.962 58.038 24.961 101.654 68.576 43.615 43.616 68.576 101.654Q779.999-606.769 779.999-540q0 68.076-21.231 130.73-21.231 62.653-58.346 117.23-37.115 54.576-88.499 99.692-51.384 45.115-111.922 77.73ZM560-226q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-99.846-103.078q14.692 0 24.961-10.269 10.269-10.269 10.269-24.961 0-14.692-10.269-24.961-10.269-10.269-24.961-10.269-14.692 0-24.961 10.269-10.269 10.269-10.269 24.961 0 14.692 10.269 24.961 10.269 10.269 24.961 10.269Zm-23.23-121.999h47.691q.769-27.308 7.731-40.462 6.961-13.154 37.808-44 17.615-17.615 28.653-37.076 11.039-19.462 11.039-43.077 0-47.154-32.192-72.269-32.193-25.115-76.885-25.115-40.538 0-68.422 22.384-27.885 22.385-39.885 53.923l44.461 17.384q6.538-17.385 21.308-32.923 14.769-15.538 42.538-15.538 30.462 0 45.308 16.73 14.847 16.731 14.847 36.655 0 18.538-10.193 32.23-10.192 13.693-25.346 28.847-31.923 27.692-40.192 46.538-8.269 18.846-8.269 55.769ZM460-513Z" />
-                </svg>
-                <span>Contact Data Visualization</span>
-            </a>
+        <div class="col-5 text-end">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
         </div>
+        <div class="form-check form-switch col-2 align-items-end">
+            <label class="form-check-label" for="flexSwitchCheckDefault">
+                Archives
+            </label>
+            <input class="form-check-input" type="checkbox" role="switch" id="archiveSwitch">
+        </div>
+        <div class="col-2 text-center">
+            <button type="button" class="btn btn-success add-button">
+                <span class="material-symbols-outlined align-middle">add</span>
+                <span class="align-middle">Add</span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Info/Calculator -->
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="copy" viewBox="0 -960 960 960">
+        <path
+            d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+</svg>
+<div id="calculatorSection" class="bd-callout bd-callout-info d-none">
+    <button class="btn-close float-end" aria-label="Close"></button>
+    <h4 class="mb-2">Coaching Calculator</h4>
+    <p><strong>Instructions:</strong> Values entered as expectations indicate the number of
+        coachings per 160 hours. For assistance calculating that value, use the calculator below.
+    </p>
+    <div class="row">
+        <div class="col-4">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Agent's Weekly Hours</span>
+                <input class="form-control" type="number" id="weeklyHours" min="1" step="1">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Desired Monthly Coachings</span>
+                <input class="form-control" type="number" id="monthlyCoachings" min="0" step="1">
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary mb-3" id="calculateBtn">Calculate</button>
+    <div id="outputBox"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.btn-close').click(function () {
+            $(this).closest('.bd-callout').addClass('d-none');
+        });
 
-        <div class="b-example-divider b-example-vr"></div>
-    </main> -->
 
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        $('#calculateBtn').click(function () {
+            const weeklyHours = parseFloat($('#weeklyHours').val());
+            const monthlyCoachings = parseFloat($('#monthlyCoachings').val());
 
-    <script src="javascript.js"></script>
+            if (isNaN(weeklyHours) || isNaN(monthlyCoachings)) {
+                new AlertBuilder('Error', "Please enter valid numbers in both fields.").build();
+                return;
+            }
 
-</body>
+            const coachingsPer160Hours = (160 / (weeklyHours * 4)) * monthlyCoachings;
 
-</html>
+            // Generate inner HTML for the output box
+            const outputHTML = `<div class="container-fluid>
+                                                            <div class="row">
+                                                            <div class="col-5">
+                                                                <div class="input-group mb-3">
+                                                                    <span class="input-group-text">Coachings every 160 Hours: </span>
+                                                                    <input type="text" class="form-control" value="${coachingsPer160Hours.toFixed(2)}" readonly>
+                                                                    <button class="btn btn-outline-secondary" id="copyBtn"><svg height="24" width="24"><use xlink:href="#copy" /></svg></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>`;
+
+            $('#outputBox').html(outputHTML);
+
+            // Use event delegation for the dynamic button
+            $(document).on('click', '#copyBtn', function () {
+                const copyText = $(this).prevAll('input').first();
+                copyText.select();
+                document.execCommand("copy");
+                AlertBuilder.showToast('Copied!', 4000);
+            });
+
+        });
+    });
+</script>
+<!-- Info/Calculator End -->
+<div class="table-responsive">
+    <table class="table table-hover mt-3">
+        <thead>
+            <th scope="col">Type</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="text-center">Performance</th>
+            <th scope="col" class="text-center">1-to-1</th>
+            <th scope="col" class="text-center">
+                Side-by-side
+                <sup data-bs-toggle="tooltip" title="Click here for info.">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 -960 960 960" width="15"
+                        style="fill: var(--bs-primary);">
+                        <path
+                            d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                </sup>
+            </th>
+            <th scope="col" class="text-center">Start Date</th>
+            <th scope="col" class="text-center">End Date</th>
+            <th scope="colgroup" colspan="2">Actions</th>
+        </thead>
+        <tbody id="newAdds"></tbody>
+        <tbody id="changes"></tbody>
+        <tbody id="searchResults"></tbody>
+    </table>
+</div>
+<template id="newAddsTemplate">
+    <tr>
+        <td class="type">
+            <select class="form-select expectation-type-dropdown">
+                <!-- JavaScript will populate this -->
+            </select>
+        </td>
+        <td class="name">
+            <div class="d-flex justify-content-center">
+                <input type="text" class="form-control text-center name-input" min="0" step="0.001" disabled>
+                <datalist class="data-list"></datalist>
+            </div>
+        </td>
+        <td class="performance text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center" min="0" step="0.001" style="width: 100px;">
+            </div>
+        </td>
+        <td class="oneToOne text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center" min="0" step="0.001" style="width: 100px;">
+            </div>
+        </td>
+        <td class="sideBySide text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center" min="0" step="0.001" style="width: 100px;">
+            </div>
+        </td>
+        <td class="startDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control" style="width: 140px;">
+            </div>
+        </td>
+        <td class="endDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control" style="width: 120px;">
+            </div>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-success save-button" disabled>Save</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-dark cancel-button">Cancel</button>
+        </td>
+    </tr>
+</template>
+<template id="changeRowTemplate">
+    <tr>
+        <td class="type"></td>
+        <td class="name"></td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center performance-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center oneToOne-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center sideBySide-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="startDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control startDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td class="endDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control endDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-success save-button">Save</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-dark cancel-button">Cancel</button>
+        </td>
+    </tr>
+</template>
+<template id="searchRowTemplate">
+    <tr>
+        <td class="type"></td>
+        <td class="name"></td>
+        <td class="performance text-center"></td>
+        <td class="oneToOne text-center"></td>
+        <td class="sideBySide text-center"></td>
+        <td class="startDate text-center"></td>
+        <td class="endDate text-center"></td>
+        <td>
+            <button type="button" class="btn btn-outline-primary edit-button">Edit</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger archive-button">Archive</button>
+        </td>
+    </tr>
+</template>
+<script>
+
+    // Toggles visibility of info section
+    $(document).ready(function () {
+        // Initialize Bootstrap tooltip
+        $('[data-bs-toggle="tooltip"]').tooltip();
+
+        // Toggle visibility of #calculatorSection
+        $('sup').click(function () {
+            $('#calculatorSection').toggleClass('d-none');
+        });
+    });
+
+
+    var expectationData = [];
+
+
+    function getExpectationData() {
+        try {
+            expectationData = [];
+            Object.entries(DATABASE.DATA.expectationData).forEach(([id, expectationObject]) => {
+                const { expectationType, resourceId, performance, oneToOne, sideBySide, startDate, endDate, active } = expectationObject;
+                let tempRow = [id, expectationType];
+                let resourceName;
+                try {
+                    resourceName = DATABASE.getResourceName(resourceId, expectationType)
+                } catch (error) {
+                    AlertBuilder.handleError(error);
+                }
+                tempRow.push(resourceName, performance, oneToOne, sideBySide, formatDate(startDate), formatDate(endDate), resourceId, active);
+                expectationData.push(tempRow);
+            });
+
+            //updateResultsBox(expectationData);
+            search();
+
+        } catch (e) {
+            console.error('An error occurred:', e);
+            AlertBuilder.handleError(e);
+        }
+    }
+    getExpectationData(); // Call to immediately initialize
+
+    function formatDate(date) {
+        return new Date(date).toISOString().split('T')[0];
+    }
+
+    function updateResultsBox(dataArray) {
+        const archiveSwitch = document.getElementById('archiveSwitch').checked;
+        dataArray = dataArray.filter(row => archiveSwitch || row[9]); // Checks the 'active' field
+
+        // Collect expectation IDs that are already in the changes box portion of the table
+        const changesBox = document.getElementById('changes');
+        const existingIds = Array.from(changesBox.querySelectorAll('tr')).map(tr => tr.dataset.expectationId);
+
+        // Exclude rows that are already in changes
+        dataArray = dataArray.filter(row => !existingIds.includes(row[0]));
+
+        dataArray.sort((a, b) => b[6].localeCompare(a[6]));
+        dataArray = dataArray.slice(0, 12);
+        const searchResultsBox = document.getElementById("searchResults");
+        const templateRow = document.getElementById("searchRowTemplate").content;
+
+        searchResultsBox.innerHTML = '';
+
+        dataArray.forEach(rowData => {
+            const tr = templateRow.cloneNode(true);
+
+            // Set the expectation ID as a data attribute for the entire row (<tr>)
+            const expectationId = rowData[0];
+            tr.querySelector('tr').dataset.expectationId = expectationId;
+
+            // Populate the cells
+            ['type', 'name', 'performance', 'oneToOne', 'sideBySide', 'startDate', 'endDate'].forEach((className, index) => {
+                tr.querySelector(`.${className}`).textContent = rowData[index + 1];
+            });
+
+            // Conditionally update buttons
+            if (rowData[9] === false) {
+                const reActivateButton = `<button type="button" class="btn btn-outline-success reActivate-button" data-expectation-id="${expectationId}">Re-Activate</button>`;
+                tr.querySelector('.edit-button').outerHTML = reActivateButton;
+                tr.querySelector('.archive-button').remove();
+            } else {
+                tr.querySelector('.edit-button').dataset.expectationId = expectationId;
+                tr.querySelector('.archive-button').dataset.expectationId = expectationId;
+            }
+
+            searchResultsBox.appendChild(tr);
+        });
+    }
+
+    function search() {
+        // Fetch and tokenize the user's search input
+        const userInput = document.getElementById("searchInput").value;
+        const searchTerms = userInput.toLowerCase().split(" ").filter(term => term.length > 0);
+
+        // Filter the expectationData array based on search input
+        const filteredExpectations = expectationData.filter(row => {
+            return searchTerms.every(term => {
+                // Check for ID search pattern
+                if (term.startsWith("id{") && term.endsWith("}")) {
+                    const id = term.substring(3, term.length - 1);
+                    return row[0] === id;
+                }
+                // Otherwise search in the "Type" and "Name" columns
+                return [row[1], row[2]].some(field => String(field).toLowerCase().includes(term));
+            });
+        });
+
+        // Update the display with filtered results
+        updateResultsBox(filteredExpectations);
+    }
+
+    /* Start of Validator classes, each class validates a different type of field. */
+    class Validator {
+        validate() {
+            throw new Error("Abstract method!");
+        }
+    }
+
+    class CoachingNumberValidator extends Validator {
+        validate(field) {
+            const value = parseFloat(field.value);
+            return isNaN(value) || value < 0;
+        }
+    }
+
+    class StartDateValidator extends Validator {
+        validate(field) {
+            const startDateValue = new Date(field.value);
+            const endDateValue = new Date(field.closest('tr').querySelector('.endDate-input').value);
+            return isNaN(startDateValue) || startDateValue.getFullYear() < 1990 || startDateValue > endDateValue;
+        }
+    }
+
+    class EndDateValidator extends Validator {
+        validate(field) {
+            const endDateValue = new Date(field.value);
+            const startDateValue = new Date(field.closest('tr').querySelector('.startDate-input').value);
+            return isNaN(endDateValue) || endDateValue.getFullYear() > 3000 || endDateValue < startDateValue;
+        }
+    }
+    /* End of Validator classes. */
+
+    // Factory to create Validators.
+    const validatorFactory = {
+        createValidator(type) {
+            switch (type) {
+                case "CoachingNumber":
+                    return new CoachingNumberValidator();
+                case "StartDate":
+                    return new StartDateValidator();
+                case "EndDate":
+                    return new EndDateValidator();
+                default:
+                    throw new Error("Invalid validator type!");
+            }
+        }
+    };
+
+    // Refactor common code into a separate function
+    function validateField(e, validatorType) {
+        const field = e.target;
+        const validator = validatorFactory.createValidator(validatorType);
+
+        if (validator.validate(field)) {
+            field.classList.add('is-invalid');
+        } else {
+            field.classList.remove('is-invalid');
+            const closestRow = field.closest('tr');
+            validateRow(closestRow);
+        }
+    }
+
+    function validateRow(row) {
+        const saveButton = row.querySelector('.save-button');
+        const inputs = row.querySelectorAll('input');
+
+        const validated = Array.from(inputs).every(input => !input.classList.contains('is-invalid'));
+
+        if (validated) {
+            saveButton.classList.remove('disabled');
+        } else {
+            saveButton.classList.add('disabled');
+        }
+    }
+
+
+    // Refactor the call of validateField function and pass the validator type as a parameter
+    function handleFieldChange(e, validatorType) {
+        // Any actions that need to happen prior to validation could be placed here
+        validateField(e, validatorType);
+    }
+
+    function handleCancelButton(e) {
+        const parentRow = $(e.target).closest('tr');
+        parentRow.fadeOut('slow', function () {
+            parentRow.remove();
+        });
+        search();
+    }
+
+    function handleEditButton(e) {
+        // Add Row to changes
+        const expectationId = e.target.dataset.expectationId;
+        try {
+            if (DATABASE.DATA.expectationData[expectationId]) {
+                const expectationObject = DATABASE.DATA.expectationData[expectationId];
+                const changesBox = document.getElementById("changes");
+                const template = document.getElementById("changeRowTemplate").content.cloneNode(true);
+                template.querySelector('tr').dataset.expectationId = expectationId;
+                let resourceName;
+                try {
+                    resourceName = DATABASE.getResourceName(expectationObject.resourceId, expectationObject.expectationType)
+                } catch (error) {
+                    throw error;
+                }
+                const performanceInput = template.querySelector('.performance-input');
+                const oneToOneInput = template.querySelector('.oneToOne-input');
+                const sideBySideInput = template.querySelector('.sideBySide-input');
+                const startDateInput = template.querySelector('.startDate-input');
+                const endDateinput = template.querySelector('.endDate-input');
+                const saveButton = template.querySelector('.save-button');
+                const cancelButton = template.querySelector('.cancel-button');
+
+                // Set Values
+                template.querySelector('.type').textContent = expectationObject.expectationType;
+                template.querySelector('.name').textContent = resourceName;
+                performanceInput.value = `${expectationObject.performance}`;
+                oneToOneInput.value = `${expectationObject.oneToOne}`;
+                sideBySideInput.value = `${expectationObject.sideBySide}`;
+                startDateInput.value = `${formatDate(expectationObject.startDate)}`;
+                endDateinput.value = `${formatDate(expectationObject.endDate)}`;
+
+                // Set Event Listeners
+                performanceInput.addEventListener('change', (e) => handleFieldChange(e, 'CoachingNumber'));
+                oneToOneInput.addEventListener('change', (e) => handleFieldChange(e, 'CoachingNumber'));
+                sideBySideInput.addEventListener('change', (e) => handleFieldChange(e, 'CoachingNumber'));
+                startDateInput.addEventListener('change', (e) => handleFieldChange(e, 'StartDate'));
+                endDateinput.addEventListener('change', (e) => handleFieldChange(e, 'EndDate'));
+                saveButton.addEventListener('click', (e) => handleSaveButton(e));
+                cancelButton.addEventListener('click', (e) => handleCancelButton(e));
+
+                // Set Data Attributes
+                saveButton.dataset.expectationId = expectationId;
+                cancelButton.dataset.expectationId = expectationId;
+                changesBox.appendChild(template);
+                search();
+            } else {
+                throw new Error(`Could not find expection id # ${expectationId}`);
+            }
+        } catch (error) {
+            AlertBuilder.handleError(error);
+        }
+    }
+
+    function handleArchiveButton(e) {
+        const archiveButton = e.target,
+            parentRow = archiveButton.closest('tr'),
+            editButton = parentRow.querySelector('.edit-button');
+        try {
+            // Disable the editButton & clear archiveButton
+            editButton.classList.add('disabled');
+            archiveButton.innerHTML = '';
+            createSpinner(archiveButton);
+            const isArchived = DATABASE.setExpectationActiveStatus(
+                archiveButton.dataset.expectationId,
+                false,
+                function () { // Success handler
+                    getExpectationData();
+                },
+                function () { // Failure handler
+                    resetButtons();
+                }
+            );
+            // only re-enable the editButton & reset archiveButton in case of failure
+            if (!isArchived) resetButtons();
+        } catch (error) {
+            resetButtons();
+            console.error('DATABASE operation failed:', error);
+        }
+        function resetButtons(label) {
+            archiveButton.innerHTML = 'Archive';
+            editButton.classList.remove('disabled');
+        }
+    }
+
+    // ToDo: Optimize this
+    function handleSaveButton(e) {
+        const parentRow = e.target.closest('tr');
+        const cancelButton = parentRow.querySelector('.cancel-button');
+        cancelButton.classList.add('disabled');
+        // Replace the button text with a Bootstrap spinning loader
+        e.target.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+        const expectation = e.target.dataset.expectationId ? DATABASE.DATA.expectationData[e.target.dataset.expectationId] : {};
+        const performanceField = parentRow.querySelector('.performance-input');
+        performanceField.classList.add('disabled');
+        performanceField.disabled = true;
+        const oneToOneField = parentRow.querySelector('.oneToOne-input');
+        oneToOneField.classList.add('disabled');
+        oneToOneField.disabled = true;
+        const sideBySideField = parentRow.querySelector('.sideBySide-input');
+        sideBySideField.classList.add('disabled');
+        sideBySideField.disabled = true;
+        const startDateField = parentRow.querySelector('.startDate-input');
+        startDateField.classList.add('disabled');
+        startDateField.disabled = true;
+        const endDateField = parentRow.querySelector('.endDate-input');
+        endDateField.classList.add('disabled');
+        endDateField.disabled = true;
+
+        const performanceValue = parseFloat(performanceField.value);
+        const oneToOneValue = parseFloat(oneToOneField.value);
+        const sideBySideValue = parseFloat(sideBySideField.value);
+
+        expectation.performance = performanceValue;
+        expectation.oneToOne = oneToOneValue;
+        expectation.sideBySide = sideBySideValue;
+        expectation.startDate = startDateField.value;
+        expectation.endDate = endDateField.value;
+        if (e.target.closest('tbody').id === 'newAdds') {
+            const typeField = parentRow.querySelector('.expectation-type-dropdown');
+            const nameField = parentRow.querySelector('.name-input');
+            typeField.disabled = true;
+            nameField.disabled = true;
+            expectation.expectationType = typeField.value;
+            const nameValue = nameField.value;
+            if (expectation.expectationType === 'Default') {
+                expectation.resourceId = -1;
+            } else {
+                if (expectation.type === 'Default') {
+                    expectation.resourceId = -1;
+                } else {
+                    // Parse string for ID
+                    console.log(`Parsing ${nameValue}`);
+                    const lastOpenParenIndex = nameValue.lastIndexOf('(');
+                    const closeParenIndex = nameValue.indexOf(')', lastOpenParenIndex);
+                    if (lastOpenParenIndex !== -1 && closeParenIndex !== -1) {
+                        console.log(`( is at ${lastOpenParenIndex} and ) is at ${closeParenIndex}`);
+                        expectation.resourceId = parseInt(nameValue.substring(lastOpenParenIndex + 1, closeParenIndex));
+                        console.log(`id value is: ${expectation.resourceId}`);
+                    }
+                }
+            }
+            expectation.active = true;
+            // Pass callbacks to handle success and failure scenarios
+            DATABASE.addExpectation(
+                expectation,
+                function () {  // Success handler
+                    const parentRow = $(e.target).closest('tr');
+                    parentRow.fadeOut('slow', function () {
+                        parentRow.remove();
+                    });
+                    getExpectationData();
+                },
+                () => {  // Failure handler
+                    endDateField.disabled = false;
+                    startDateField.disabled = false;
+                    sideBySideField.disabled = false;
+                    oneToOneField.disabled = false;
+                    performanceField.disabled = false;
+                    typeField.disabled = false;
+                    nameField.disabled = false;
+                    e.target.innerHTML = 'Save';
+                    cancelButton.classList.remove('disabled');
+                }
+            );
+
+        } else {
+            // Pass callbacks to handle success and failure scenarios
+            DATABASE.updateExpectation(
+                e.target.dataset.expectationId,
+                expectation,
+                function () {  // Success handler
+                    const parentRow = $(e.target).closest('tr');
+                    parentRow.fadeOut('slow', function () {
+                        parentRow.remove();
+                    });
+                    getExpectationData();
+                },
+                () => {  // Failure handler
+                    endDateField.disabled = false;
+                    startDateField.disabled = false;
+                    sideBySideField.disabled = false;
+                    oneToOneField.disabled = false;
+                    performanceField.disabled = false;
+                    e.target.innerHTML = 'Save';
+                    cancelButton.classList.remove('disabled');
+                }
+            );
+        }
+    }
+
+    const handleReActivateButton = (event) => {
+        const button = event.target;
+        const expectationId = button.dataset.expectationId;
+        if (!expectationId) {
+            // Defensive check for existence of required dataset 
+            console.error("Unable to get expectationId");
+            const error = new Error("Unable to get Expectation ID");
+            AlertBuilder.handleError(error);
+        }
+
+        createSpinner(button); // Optimization and Creating more modular code 
+
+        DATABASE.setExpectationActiveStatus(
+            expectationId,
+            true,
+            () => onSuccess(event), // Optimization
+            () => onError(button)); // Optimization
+
+        const onSuccess = (event) => {
+            const buttonElement = event.target;
+            const parentRow = $(buttonElement).closest('tr');
+            parentRow.fadeOut('slow', () => parentRow.remove());
+            getExpectationData();
+        }
+
+        const onError = (buttonElement) => {
+            buttonElement.innerHTML = 'Re-Activate'; // Unexpected event handler 
+        }
+    };
+
+    const createSpinner = (buttonElement) => {
+        const spinner = document.createElement('span');
+        spinner.classList.add('spinner-border', 'spinner-border-sm');
+        spinner.setAttribute('role', 'status'); //Using the setAttribute function is more readable and a best practice
+        buttonElement.innerHTML = '';
+        buttonElement.appendChild(spinner);
+    }
+
+    //ToDo: optimize this
+    // Make template better so that we don't have to define as much in javascript
+    function handleAddbutton() {
+
+        const tBody = document.getElementById("newAdds");
+        const templateRow = document.getElementById("newAddsTemplate").content;
+        const tr = templateRow.cloneNode(true);
+        const dropdown = tr.querySelector('.expectation-type-dropdown');  // Added the period before the class name
+        const expectationTypes = DATABASE.expectationTypes;
+        // Generate a unique identifier (you can use any strategy you like)
+        const uniqueID = `data-list-${new Date().getTime()}`;
+        const dataList = tr.querySelector('.data-list');
+        const nameInput = tr.querySelector('.name-input');
+        const saveButton = tr.querySelector('.save-button');
+        dataList.id = uniqueID;
+        nameInput.setAttribute('list', uniqueID);
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.innerText = '';
+        dropdown.appendChild(defaultOption);
+
+        expectationTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.innerText = type;
+            dropdown.appendChild(option);  // Changed from dropdownTemplate
+        });
+
+        // Add the event listener to this specific dropdown
+        dropdown.addEventListener('change', function (event) {
+            const type = event.target.value;
+            const nameInput = event.target.closest('tr').querySelector('.name-input');
+            const clearDataList = () => {
+                dataList.innerHTML = "";
+            };
+
+            const appendOption = (label) => {
+                const option = document.createElement("option");
+                option.value = label;
+                dataList.appendChild(option);
+            };
+
+            switch (type) {
+                case 'Default':
+                    nameInput.value = 'All Agents';
+                    nameInput.disabled = true;
+                    break;
+
+                case 'Agent':
+                    clearDataList();
+                    Object.entries(DATABASE.DATA.employeeData).forEach(([id, employee]) => {
+                        if (employee.level !== '' && employee.level <= 1) {
+                            appendOption(`${employee.name} (${id})`);
+                            nameInput.disabled = false;
+                        }
+                    });
+                    break;
+
+                case 'Workgroup':
+                    clearDataList();
+                    Object.entries(DATABASE.DATA.workgroupData).forEach(([id, workgroup]) => {
+                        appendOption(`${workgroup} (${id})`);
+                        nameInput.disabled = false;
+                    });
+                    break;
+
+                case 'Job Profile':
+                    clearDataList();
+                    Object.entries(DATABASE.DATA.jobProfileData).forEach(([id, profile]) => {
+                        appendOption(`${profile} (${id})`);
+                        nameInput.disabled = false;
+                    });
+                    break;
+
+                default:
+                    // Do nothing
+                    break;
+            }
+        });
+
+        const validateAll = (e) => {
+            const tableRow = e.target.closest('tr');
+            let allValid = true;
+
+            if (dropdown.value === '') {
+                allValid = false;
+            }
+
+            if (allValid) {
+                if (tableRow) {
+                    const inputs = tableRow.querySelectorAll('input');
+                    for (const input of inputs) {
+                        // Check for is-invalid class or empty value
+                        if (input.classList.contains('is-invalid') || input.value === '') {
+                            allValid = false;
+                            break;
+                        }
+                    }
+                } else {
+                    console.log("tr is null or undefined");
+                }
+
+            }
+            saveButton.disabled = !allValid;
+        }
+        nameInput.addEventListener('change', function (e) {
+            let isValid = false;
+
+            // Retrieve all option elements in the datalist
+            const options = dataList.querySelectorAll('option');
+
+            // Check if the input value matches any of the datalist options
+            for (const option of options) {
+                if (option.value === nameInput.value) {
+                    isValid = true;
+                    break;
+                }
+            }
+            if (isValid) {
+                nameInput.classList.remove('is-invalid');
+            } else {
+                nameInput.classList.add('is-invalid');
+            }
+            validateAll(e);
+        });
+        const performanceField = tr.querySelector('.performance input');
+        performanceField.addEventListener('input', function (e) {
+            if (performanceField.value < 0 || performanceField.value === '') {
+                performanceField.classList.add('is-invalid');
+            } else {
+                performanceField.classList.remove('is-invalid');
+            }
+            validateAll(e);
+        });
+        const oneToOneField = tr.querySelector('.oneToOne input');
+        oneToOneField.addEventListener('input', function (e) {
+            if (oneToOneField.value < 0 || oneToOneField.value === '') {
+                oneToOneField.classList.add('is-invalid');
+            } else {
+                oneToOneField.classList.remove('is-invalid');
+            }
+            validateAll(e);
+        });
+        const sideBySideField = tr.querySelector('.sideBySide input');
+        sideBySideField.addEventListener('input', function (e) {
+            if (sideBySideField.value < 0 || sideBySideField.value === '') {
+                sideBySideField.classList.add('is-invalid');
+            } else {
+                sideBySideField.classList.remove('is-invalid');
+            }
+            validateAll(e);
+        });
+        const startDateField = tr.querySelector('.startDate input');
+        const endDateField = tr.querySelector('.endDate input');
+
+        startDateField.addEventListener('input', function (e) {
+            let isValid = true;
+            const startDate = new Date(startDateField.value);
+            const endDate = new Date(endDateField.value);
+
+            if (startDateField.value === '' || startDate < new Date('1990-01-01') || (endDateField.value !== '' && startDate > endDate)) {
+                isValid = false;
+                startDateField.classList.add('is-invalid');
+            } else {
+                startDateField.classList.remove('is-invalid');
+            }
+            validateAll(e);
+        });
+
+        endDateField.addEventListener('input', function (e) {
+            let isValid = true;
+            const startDate = new Date(startDateField.value);
+            const endDate = new Date(endDateField.value);
+
+            if (endDateField.value === '' || endDate > new Date('3000-12-31') || (startDateField.value !== '' && endDate < startDate)) {
+                isValid = false;
+                endDateField.classList.add('is-invalid');
+            } else {
+                endDateField.classList.remove('is-invalid');
+            }
+            validateAll(e);
+        });
+        // Append the new row to the table
+        tBody.appendChild(tr);
+    }
+
+    if (!document.ExpectationEventListenersAdded) {
+        document.getElementById("searchInput").addEventListener("input", search);
+        document.getElementById("archiveSwitch").addEventListener("change", search);
+        // ToDo: remove these once everything just has event listeners built in.
+        document.addEventListener("click", function (e) {
+            const target = e.target.closest('button');
+            if (target && target.classList) {
+                if (target.classList.contains('edit-button')) {
+                    handleEditButton(e);
+                } else if (target.classList.contains('archive-button')) {
+                    handleArchiveButton(e);
+                } else if (target.classList.contains('cancel-button')) {
+                    handleCancelButton(e);
+                } else if (target.classList.contains('reActivate-button')) {
+                    handleReActivateButton(e);
+                } else if (target.classList.contains('add-button')) {
+                    handleAddbutton(e);
+                }
+            }
+        });
+    }
+
+    function validateFields(changesRow) {
+        let validated = true;
+        const performanceField = changesRow.querySelector('.performance input');
+        const oneToOneField = changesRow.querySelector('.oneToOne input');
+        const sideBySideField = changesRow.querySelector('.sideBySide input');
+        const startDateField = changesRow.querySelector('.startDate input');
+        const endDateField = changesRow.querySelector('.endDate input');
+
+        const performanceValue = parseFloat(performanceField.value);
+        const oneToOneValue = parseFloat(oneToOneField.value);
+        const sideBySideValue = parseFloat(sideBySideField.value);
+        const startDateValue = new Date(startDateField.value);
+        const endDateValue = new Date(endDateField.value);
+
+        // Validate performance
+        if (isNaN(performanceValue) || performanceValue < 0) {
+            performanceField.classList.add('is-invalid');
+            validated = false;
+        } else {
+            performanceField.classList.remove('is-invalid');
+        }
+
+        // Validate oneToOne
+        if (isNaN(oneToOneValue) || oneToOneValue < 0) {
+            oneToOneField.classList.add('is-invalid');
+            validated = false;
+        } else {
+            oneToOneField.classList.remove('is-invalid');
+        }
+
+        // Validate sideBySide
+        if (isNaN(sideBySideValue) || sideBySideValue < 0) {
+            sideBySideField.classList.add('is-invalid');
+            validated = false;
+        } else {
+            sideBySideField.classList.remove('is-invalid');
+        }
+
+        // Validate startDate
+        if (isNaN(startDateValue) || startDateValue.getFullYear() < 1990 || startDateValue > endDateValue) {
+            startDateField.classList.add('is-invalid');
+            validated = false;
+        } else {
+            startDateField.classList.remove('is-invalid');
+        }
+
+        // Validate endDate
+        if (isNaN(endDateValue) || endDateValue.getFullYear() > 3000 || endDateValue < startDateValue) {
+            endDateField.classList.add('is-invalid');
+            validated = false;
+        } else {
+            endDateField.classList.remove('is-invalid');
+        }
+
+        // Enable or disable save button
+        const saveButton = changesRow.querySelector('.save-button');
+        if (validated) {
+            saveButton.classList.remove('disabled');
+        } else {
+            saveButton.classList.add('disabled');
+        }
+    }
+    document.ExpectationEventListenersAdded = true;
+</script>
