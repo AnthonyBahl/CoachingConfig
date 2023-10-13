@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "ES5",
+      "module": "commonjs",
+      "allowJs": true,
+      "outDir": "./out",
+      "types": ["google-apps-script"]
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx",
+      "src/**/*.gs"
+    ]
+  }
+  
