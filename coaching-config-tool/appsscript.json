@@ -1,0 +1,26 @@
+{
+  "timeZone": "America/Panama",
+  "dependencies": {
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "BigQuery",
+        "version": "v2",
+        "serviceId": "bigquery"
+      }
+    ],
+    "libraries": [
+      {
+        "userSymbol": "CoachingDashboard",
+        "version": "0",
+        "libraryId": "1fucwkgYDnTD8NE07QNJVNKcxmi44YMWOTZJcS5fe8SV7KvYuRBK9ASu1",
+        "developmentMode": true
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "DOMAIN"
+  }
+}

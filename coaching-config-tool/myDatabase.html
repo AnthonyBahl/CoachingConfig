@@ -1,0 +1,317 @@
+<script>
+    class myDatabase {
+        constructor() {
+            this.DATA = {};
+            this.expectationTypes = [''];
+            this.archiveEducated = false;
+
+            toggleLoader(true);
+
+            // Get Expectation Types
+            google.script.run
+                .withSuccessHandler((expectationArray) => {
+                    this.expectationTypes = JSON.parse(expectationArray);
+                })
+                .withFailureHandler((e) => {
+                    AlertBuilder.handleError(e);
+                })
+                .getExpectationTypes();
+
+            // Get Data
+            google.script.run
+                .withSuccessHandler((jsonString) => {
+                    // Parse the JSON string and assign it to this.expectations
+                    this.DATA = JSON.parse(jsonString);
+                    toggleLoader(false);
+                })
+                .withFailureHandler((e) => {
+                    AlertBuilder.handleError(e);
+                    toggleLoader(false);
+                })
+                .generateJSON();
+        }
+
+        /**
+         * Retrieves the name of a resource based on its ID and expectation type.
+         *
+         * @param {string|number} resourceId - The ID of the resource to be located.
+         * @param {string} expectationType - The type of the resource ('Default', 'Agent', 'Workgroup', 'Job Profile').
+         *
+         * @returns {string} The name of the resource.
+         *
+         * @throws {Error} If the `expectationType` is not recognized or if the resource with the given `resourceId` is not found.
+         *
+         * @example
+         * // Returns 'All Agents'
+         * getResourceName('123', 'Default');
+         * 
+         * // Throws an Error
+         * getResourceName('123', 'UnknownType');
+         */
+        getResourceName(resourceId, expectationType) {
+            switch (expectationType) {
+                case 'Default':
+                    return 'All Agents';
+                    break;
+                case 'Agent':
+                case 'Workgroup':
+                case 'Job Profile':
+                    const typeData = expectationType === 'Job Profile' ? this.DATA[`jobProfileData`] : this.DATA[`${expectationType.toLowerCase()}Data`];
+                    if (typeData && typeData[resourceId]) {
+                        if (expectationType === "Agent") {
+                            return `${typeData[resourceId].name} (${resourceId})`;
+                        } else {
+                            return `${typeData[resourceId]} (${resourceId})`;
+                        }
+                    } else {
+                        throw new Error(`Could not find ${expectationType} with ID of ${resourceId}`);
+                    }
+                    break;
+                default:
+                    AlertBuilder.handleError(new Error(`Error in myDatabase.getResourceName(). Unable to find data for resource '${expectationType}'`));
+            }
+        }
+
+        getUserEmailsTemp() {
+            if (!this.DATA || !this.DATA['employeeData']) {
+                const error = new Error('DATA or employeeData is not available');
+                AlertBuilder.handleError(error);
+                return;
+            }
+            const userInfo = this.DATA['employeeData'];
+            const emailArray = [];
+            for (const id in userInfo) {
+                const user = userInfo[id];
+                emailArray.push(user.email);
+            }
+            emailArray.sort();
+            return emailArray;
+        }
+
+        /**
+         * Retrieves an array of user emails from the employee data in the database.
+         *
+         * @async
+         * @function
+         * @returns {Promise<string[]>} A promise that resolves with an array of user emails.
+         * @throws {Error} If DATA or employeeData is not available.
+         */
+        async getUserEmails() {
+            return new Promise((resolve, reject) => {
+                try {
+                    // Defensive coding: Check if DATA and employeeData exist before proceeding
+                    if (!this.DATA || !this.DATA['employeeData']) {
+                        const error = new Error('DATA or employeeData is not available');
+                        AlertBuilder.handleError(error);
+                        reject(error);
+                        return;
+                    }
+
+                    const userInfo = this.DATA['employeeData'];
+                    const emailArray = [];
+                    for (const id in userInfo) {
+                        const user = userInfo[id];
+                        emailArray.push(user.email);
+                    }
+
+                    resolve(emailArray); // Resolve the promise with the result
+                } catch (err) {
+                    AlertBuilder.handleError(err); // Pass the error to AlertBuilder
+                    reject(err); // Reject the promise for further handling
+                }
+            });
+        }
+
+
+        getResourceNames(expectationType) {
+            try {
+                // Check for the default case upfront to exit early
+                if (expectationType === 'Default') {
+                    return ['All Agents'];
+                }
+
+                // Map types to their data keys
+                const dataKeyMapping = {
+                    'Agent': 'employeeData',
+                    'Workgroup': 'workgroupData',
+                    'Job Profile': 'jobProfileData'
+                };
+
+                // Get the appropriate data key
+                const dataKey = dataKeyMapping[expectationType];
+
+                // Check if the expectationType is invalid
+                if (!dataKey) {
+                    throw new Error(`Invalid expectation type: ${expectationType}`);
+                }
+
+                // Get the appropriate data
+                const typeData = this.DATA[dataKey];
+
+                // Defensive check for missing data
+                if (!typeData) {
+                    throw new Error(`Could not find data for ${expectationType}`);
+                }
+
+                // Create an array of names based on the data type
+                let nameArray = [];
+                for (const id in typeData) {
+                    const item = typeData[id];
+                    if (expectationType === 'Agent') {
+                        if (item.level !== '' && item.level <= 1) {
+                            nameArray.push(`${item.name} (${id})`);
+                        }
+                    } else {
+                        nameArray.push(`${item} (${id})`);
+                    }
+                }
+
+                return nameArray;
+            } catch (err) {
+                AlertBuilder.handleError(err); // Pass the error to AlertBuilder
+                throw err; // Re-throw the error for further handling
+            }
+        }
+
+
+        /**
+        * Updates the expectation data by the given expectation ID.
+        *
+        * @param {string} expectationId - The ID of the expectation to update.
+        * @param {*} expectation - The new expectation data to replace the existing one.
+        * @param {function} [onSuccess] - Optional callback function to execute upon successful update.
+        * @param {function} [onFailure] - Optional callback function to execute upon failure.
+        *
+        * @throws {Error} Throws an error if the expectationId is not in the DATA.expectationData object.
+        */
+        updateExpectation(expectationId, expectation, onSuccess, onFailure) {
+            if (expectationId in this.DATA.expectationData) {
+                google.script.run
+                    .withSuccessHandler(() => {
+                        this.DATA.expectationData[expectationId] = expectation;
+                        // Run optional success callback if provided
+                        if (typeof onSuccess === 'function') {
+                            onSuccess();
+                        }
+                    })
+                    .withFailureHandler((e) => {
+                        if (typeof onFailure === 'function') {
+                            onFailure();
+                        }
+                        AlertBuilder.handleError(e);
+                    })
+                    .enqueue('updateExpectationData', expectationId, expectation);
+
+            } else {
+                throw new Error(`Error, ${expectationId} is not an existing expectation`);
+            }
+        }
+
+        /**
+        * Archive an expectation after validating user awareness.
+        * @param {number|string} expectationId - The ID of the expectation to archive.
+        * @param {Function} [onSuccess] - Optional callback for successful operation.
+        * @param {Function} [onFailure] - Optional callback for failed operation.
+        * @returns {boolean} - Returns false if the user has not acknowledged the warning about archiving.
+        */
+        setExpectationActiveStatus(expectationId, status, onSuccess, onFailure) {
+            if (this.archiveEducated || status === true) {
+                google.script.run
+                    .withSuccessHandler(() => {
+                        this.DATA.expectationData[expectationId].active = status;
+                        // Run optional success callback if provided
+                        if (typeof onSuccess === 'function') {
+                            onSuccess();
+                        }
+                    })
+                    .withFailureHandler((e) => {
+                        if (typeof onFailure === 'function') {
+                            onFailure();
+                        }
+                        AlertBuilder.handleError(e);
+                    })
+                    .enqueue('setExpectationStatus', expectationId, status);
+                return true;
+            } else {
+                new AlertBuilder()
+                    .setType('Acknowledge')
+                    .setMessage(`Archiving should be considered a last resort as it can affect historical metrics for managers. It's recommended to update the end date instead for best practice.`)
+                    .setTimer(15)
+                    .setCallback(() => {
+                        this.archiveEducated = true;
+                    })
+                    .build();
+                return false;
+            }
+        }
+
+        /**
+        * Adds a new expectation to the DATA object and handles success or failure cases.
+        * 
+        * @param {Object} expectation - The expectation object to add.
+        * @param {Function} [onSuccess] - Optional callback function to run if the operation is successful.
+        * @param {Function} [onFailure] - Optional callback function to run if the operation fails.
+        */
+        addExpectation(expectation, onSuccess, onFailure) {
+            google.script.run
+                .withSuccessHandler((newId) => {
+                    //this.DATA.expectationData[expectationId].newId = expectation;
+                    // Run optional success callback if provided
+                    if (typeof onSuccess === 'function') {
+                        onSuccess();
+                    }
+                })
+                .withFailureHandler((e) => {
+                    AlertBuilder.handleError(e);
+                    if (typeof onFailure === 'function') {
+                        onFailure();
+                    }
+                })
+                .enqueue('addNewExpectation', expectation);
+        }
+
+
+        /**
+         * Update a Form
+         * ToDO: Should be able to pass as many modifications as necessary.
+         */
+        updateForm(formId) {
+            // ToDo: Update any necessary fields and then pass to server
+            // ToDo: Upon success from server, update this.DATA
+            // ToDo: Return Success
+            // ToDo: Handle errors from server
+        }
+
+        /**
+         * Update an Form
+         */
+        archiveForm(formId) {
+            // ToDo: Reach out to server
+            // ToDo: Upon success, update this.DATA
+            // ToDo: Return Success
+            // ToDo: Handle errors from server
+        }
+
+        /**
+         * Add a new Form
+         * ToDO: Add Parameters
+         */
+        addForm() {
+            // ToDo: Compile data and pass to server for validation and processing
+            // ToDo: upon success, update this.DATA
+            // ToDo: Return Success
+            // ToDo: Handle errors from server
+        }
+
+        /**
+         * Update a Question
+         * ToDO: Should be able to pass as many modifications as necessary.
+         */
+        updateQuestion(formId) {
+            // ToDo: Update any necessary fields and then pass to server
+            // ToDo: Upon success from server, update this.DATA
+            // ToDo: Return Success
+            // ToDo: Handle errors from server
+        }
+    }
+</script> 

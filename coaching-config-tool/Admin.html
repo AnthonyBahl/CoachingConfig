@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="addBtn" viewBox="0 -960 960 960">
+        <path style="fill: white" d="M450.001-450.001h-230v-59.998h230v-230h59.998v230h230v59.998h-230v230h-59.998v-230Z"/>
+    </symbol>
+    <symbol id="saveBtn" viewbox="0 -960 960 960">
+        <path style="fill: green;"
+            d="M819.999-671.538v459.229q0 30.308-21 51.308t-51.308 21H212.309q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h459.229l148.461 148.461ZM760-646 646-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v535.382q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h535.382q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847V-646ZM480-269.233q41.538 0 70.768-29.23 29.231-29.231 29.231-70.768 0-41.538-29.231-70.769-29.23-29.23-70.768-29.23T409.232-440q-29.231 29.231-29.231 70.769 0 41.537 29.231 70.768 29.23 29.23 70.768 29.23ZM255.386-564.616h328.459v-139.998H255.386v139.998ZM200-646V-200-760v114Z" />
+    </symbol>
+    <symbol id="removeBtn" viewBox="0 -960 960 960">
+        <path style="fill: red;" d="M220.001-450.001v-59.998h519.998v59.998H220.001Z" />
+    </symbol>
+</svg>
+
+<div class="container mt-5">
+    <h1>Admin Settings</h1>
+    <hr>
+    <!-- User Access Levels Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <h3>User Access Levels</h3>
+            <table class="table table-hover mt-3">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th colspan="2">Access Level</th>
+                    </tr>
+                </thead>
+                <tbody id="userAccessTable">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end">
+                <button id="add-user" class="btn btn-success">
+                    <svg class="svg-btn" width="24" height="24">
+                        <use href="#addBtn"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Wrap in an IIFE to encapsulate scope
+    (async () => {
+        // Fetches the user role and roles data, then sets up the add button and loads the user access.
+        async function init() {
+            try {
+                const myRole = await executeGAS('getUserRole', null, null); // Get my role
+                const rolesObject = await executeGAS('getRoles', null, null);  // Get roles as an object
+                const ROLES = Object.values(rolesObject);          // Get roles as an array
+                await setupAddButton(ROLES, myRole);
+                await loadUserAccess(ROLES, myRole);
+                toggleLoader(false);
+            } catch (err) {
+                handleAndThrowError(err);
+            }
+        }
+
+        /**
+         * Creates a spinner element and replaces the content of a given button element with the spinner.
+         * @param {HTMLElement} buttonElement - The button element to replace the content of with the spinner.
+         * @returns {void}
+         */
+        const createSpinner = (buttonElement) => {
+            const spinner = document.createElement('span');
+            spinner.classList.add('spinner-border', 'spinner-border-sm');
+            spinner.setAttribute('role', 'status'); //Using the setAttribute function is more readable and a best practice
+            buttonElement.innerHTML = '';
+            buttonElement.appendChild(spinner);
+        }
+
+        // Optimized and centralized error handling
+        function handleAndThrowError(err) {
+            AlertBuilder.handleError(err);
+            throw err;
+        }
+
+        // Moved repeated logic to a single function
+        async function executeGAS(methodName, successCallback, failureCallback, ...args) {
+            try {
+                return await new Promise((resolve, reject) => {
+                    google.script.run
+                        .withSuccessHandler(resolve)
+                        .withFailureHandler(handleAndThrowError)
+                    [methodName](...args);
+                });
+            } catch (err) {
+                handleAndThrowError(err);
+            }
+        }
+
+        function setupAddButton(rolesArray, myRole) {
+            const addButton = document.getElementById('add-user');
+            toggleVisibility(addButton, true);
+            if (!addButton) {
+                throw new Error('Add button element not found');
+            }
+
+            // remove any existing 'click' listeners on addButton
+            const newAddButton = addButton.cloneNode(true);
+            newAddButton.addEventListener('click', (e) => {
+                toggleVisibility(e.target.closest('button'), false);
+                addNewUserRow(rolesArray, myRole);
+            });            
+            addButton.parentNode.replaceChild(newAddButton, addButton);
+        }
+
+        function toggleVisibility(ele, state) {
+            if (!ele) {
+                throw new Error('Must provide a button element');
+            }
+            ele.disabled = !state;
+            ele.classList.toggle('d-none', !state);
+            ele.classList.toggle('disabled', !state);
+        }
+
+        /**
+         * Loads the user access levels into the table. It fetches the user access data and populates the table with the user email and corresponding role.
+         * @param {boolean} state - The state to toggle the loader to.
+         * @returns {void}
+         */
+        async function loadUserAccess(ROLES, myRole) {
+            const tableBody = document.getElementById('userAccessTable');
+            if (!tableBody) {
+                throw new Error('Table body not found');
+            }
+            tableBody.innerHTML = '';
+            const userAccessData = await executeGAS('getUsers', null, null);
+            for (const [userEmail, role] of Object.entries(userAccessData)) {
+                insertRow(tableBody, userEmail, role, ROLES, myRole);
+            }
+        }
+
+        /**
+         * Inserts a new row into the user access table. It seems to handle the logic of determining which roles are selectable based on the current user's role.
+         * @param {HTMLElement} tableBody - The table body element to insert the row into.
+         * @param {string} userEmail - The user email to insert into the first cell of the row.
+         * @param {string} role - The role to insert into the second cell of the row.
+         * @param {string[]} rolesArray - An array of roles.
+         * @param {string} myRole - The role of the current user.
+         * @returns {void}
+         */
+        function insertRow(tableBody, userEmail, role, rolesArray, myRole) {
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = userEmail;
+            const cell2 = row.insertCell(1);
+            // For myRole === owners, display dropdown for all roles except 'owner'. For Everyone else only show text
+            if (myRole === 'owner') {
+                cell2.appendChild(role === 'owner' ? document.createTextNode('Owner') : createRoleDropdown(role, userEmail, rolesArray));
+                role !== 'owner' ? row.insertCell(2).appendChild(createButton('remove', row)) : row.insertCell(2);
+                row.cells[2].classList.add('text-center');
+            } else {
+                cell2.appendChild(document.createTextNode(role));
+                (role !== 'owner' && role !== 'admin') ? row.insertCell(2).appendChild(createButton('remove', row)) : row.insertCell(2);
+                row.cells[2].classList.add('text-center');
+            }
+        }
+
+        function addNewUserRow(rolesArray, myRole) {
+            const tableBody = document.getElementById('userAccessTable');
+            const row = tableBody.insertRow();
+            const userEmails = DATABASE.getUserEmailsTemp();
+            row.insertCell(0).appendChild(createEmailDropdown(userEmails));
+            row.insertCell(1).appendChild(createRoleDropdown(null, null, rolesArray));
+            if (myRole !== 'owner') {
+                const selectElement = row.cells[1].firstChild;
+                selectElement.disabled = true;
+                selectElement.value = 'editor';
+            }
+            row.insertCell(2).appendChild(createButton('save', row));
+            row.cells[2].classList.add('text-center');
+            refreshSelectPicker();
+        }
+
+        function createButton(type, row) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '24');
+            svg.setAttribute('height', '24');
+            svg.classList.add('svg-btn');
+            const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+            switch (type) {
+                case 'save':
+                    use.setAttribute('href', '#saveBtn');
+                    svg.addEventListener('click', event => handleSaveButtonClick(row));
+                    break;
+                case 'remove':
+                    use.setAttribute('href', '#removeBtn');
+                    svg.addEventListener('click', event => handleRemoveButtonClick(row));
+                    break;
+                default:
+                    break;
+            }
+            svg.appendChild(use);
+            return svg;
+        }
+
+        function handleSaveButtonClick(row) {
+            console.log(row);
+            const userEmail = row.cells[0].firstChild.firstChild.value;
+            const role = row.cells[1].firstChild.value;
+            addUser(userEmail, role);
+        }
+
+        function handleRemoveButtonClick(row) {
+            const userEmail = row.cells[0].textContent;
+            removeUser(userEmail);
+        }
+
+        // Combined createEmailDropdown and createRoleDropdown
+        function createDropdown(options, classNames, changeHandler, selectedOption = null) {
+            const selectElement = document.createElement('select');
+            selectElement.classList.add('form-control', ...classNames);
+
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                optionElement.selected = option === selectedOption; // Set selected option if applicable
+                selectElement.appendChild(optionElement);
+            });
+
+            if (changeHandler) selectElement.addEventListener('change', changeHandler);
+
+            return selectElement;
+        }
+
+        function createEmailDropdown(userEmails) {
+            return createDropdown(userEmails, ['user-emails', 'selectpicker'], event => { });
+        }
+
+        function createRoleDropdown(selectedRole, userEmail, rolesArray) {
+            if (userEmail === null) {
+                return createDropdown(rolesArray, ['roles'], null, selectedRole);
+            } else {
+                return createDropdown(rolesArray, ['roles'], event => editUser(userEmail, event.target.value), selectedRole);
+            }
+        }
+
+        function refreshSelectPicker() {
+            $('.selectpicker').selectpicker('refresh');
+        }
+
+        async function editUser(userEmail, newRole) {
+            await executeGAS('editUser', init(), null, userEmail, newRole);
+        }
+
+        async function addUser(userEmail, role) {
+            await executeGAS('addNewUser', init(), null, userEmail, role);
+        }
+
+        async function removeUser(userEmail) {
+            await executeGAS('removeUser', init(), null, userEmail);
+        }
+
+        init();
+    })();
+</script>

@@ -1,0 +1,312 @@
+<script>
+    /**
+     * A class to manage, build and display alerts.
+     */
+    class AlertBuilder {
+        static activeAlerts = 0;
+        static alertQueue = [];
+        static additionalAlertElement = null;
+
+        /**
+         * @param {string} [type='Warning'] - The type of alert.
+         * @param {string} [message=''] - The message to display.
+         */
+        constructor(type = 'Warning', message = '') {
+            this.type = type;
+            this.title = '';
+            this.message = message;
+            this.timer = null;
+            this.callback = null;
+            this.callbackParams = null;
+            this.alertElement = document.createElement('div');
+            if (type) this.setType(type);
+            if (message) this.setMessage(message);
+        }
+
+        /**
+         * Set the type of alert.
+         * @param {string} type - The type of the alert.
+         * @returns {AlertBuilder} Returns the instance for chaining.
+         * @throws {Error} Throws an error if the type is invalid.
+         */
+        setType(type) {
+            const validTypes = ['Error', 'Warning', 'Success', 'Info', 'Acknowledge'];
+            if (validTypes.includes(type)) {
+                this.type = type;
+                return this;
+            }
+            throw new Error(`Invalid alert type. Valid types are: ${validTypes.join(", ")}`);
+        }
+
+        /**
+         * Set the title of the alert.
+         * @param {string} title - The title of the alert.
+         * @returns {AlertBuilder} Returns the instance for chaining.
+         * @throws {Error} Throws an error if the title is not a non-empty string.
+         */
+        setTitle(title) {
+            if (typeof title === 'string' && title.trim() !== '') {
+                this.title = title.toLowerCase() === 'none' ? '&nbsp;' : title.endsWith('&nbsp;') ? title : `${title}:&nbsp;`;
+                return this;
+            }
+            throw new Error('Title must be a non-empty string.');
+        }
+
+        /**
+         * Set the message for the alert.
+         * @param {string} message - The message to display.
+         * @returns {AlertBuilder} Returns the instance for chaining.
+         * @throws {Error} Throws an error if the message is not a non-empty string.
+         */
+        setMessage(message) {
+            if (typeof message === 'string' && message.trim() !== '') {
+                this.message = message;
+                return this;
+            }
+            throw new Error('Message must be a non-empty string.');
+        }
+
+        /**
+         * Set the timer for the alert.
+         * @param {number} timer - The timer value in seconds.
+         * @returns {AlertBuilder} Returns the instance for chaining.
+         * @throws {Error} Throws an error if the timer is not a positive integer.
+         */
+        setTimer(timer) {
+            if (Number.isInteger(timer) && timer > 0) {
+                this.timer = timer;
+                return this;
+            }
+            throw new Error('Timer must be a positive whole number.');
+        }
+
+        /**
+         * Set the callback function for the alert.
+         * @param {function} callback - The callback function.
+         * @param {...any} params - Parameters for the callback function.
+         * @returns {AlertBuilder} Returns the instance for chaining.
+         * @throws {Error} Throws an error if the callback is not a function.
+         */
+        setCallback(callback, ...params) {
+            if (typeof callback === 'function') {
+                this.callback = callback;
+                this.callbackParams = params;
+                return this;
+            }
+            throw new Error('Callback must be a function.');
+        }
+
+        /**
+         * Helper method to create an HTML element.
+         * @param {string} type - The HTML element type.
+         * @param {string} classNames - The classes to apply to the element.
+         * @param {string} text - The text content for the element.
+         * @returns {HTMLElement} The created HTML element.
+         */
+        createElement(type, classNames, text) {
+            const element = document.createElement(type);
+            element.className = classNames;
+            element.textContent = text;
+            return element;
+        }
+
+        /**
+         * Build and display the alert.
+         * @throws {Error} Throws an error if required properties are missing.
+         */
+        build() {
+            if (!this.type || !this.message) throw new Error('Type and Message are required to build an alert.');
+            if (this.type === 'Acknowledge' && (this.timer === null || this.callback === null)) throw new Error('Timer and Callback are required for Acknowledge alerts.');
+
+            const alertClassMap = {
+                'Error': 'alert-danger',
+                'Warning': 'alert-warning',
+                'Success': 'alert-success',
+                'Info': 'alert-info',
+                'Acknowledge': 'alert-danger',
+            };
+
+            this.alertElement.className = `alert alert-dismissible fade show d-flex align-items-center ${alertClassMap[this.type]}`;
+            this.alertElement.role = 'alert';
+
+            const iconMap = {
+                'Error': 'error',
+                'Warning': 'warning',
+                'Info': 'info',
+                'Acknowledge': 'warning'
+            };
+
+            if (iconMap[this.type]) {
+                this.alertElement.appendChild(this.createElement('span', 'material-symbols-outlined me-2', iconMap[this.type]));
+            }
+
+            const strongElem = document.createElement('strong');
+            strongElem.innerHTML = this.title || `${this.type}:&nbsp;`;
+            this.alertElement.appendChild(strongElem);
+
+            this.alertElement.appendChild(this.createElement('div', 'flex-grow-1', this.message));
+
+            if (this.type !== 'Acknowledge') {
+                const closeButton = this.createElement('button', 'btn-close', '');
+                closeButton.type = 'button';
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.remove());
+                this.alertElement.appendChild(closeButton);
+            }
+
+            AlertBuilder.alertQueue.push(this);
+            AlertBuilder.updateDisplay();
+        }
+
+        /**
+         * Remove the alert.
+         */
+        remove() {
+            this.alertElement.remove();
+            AlertBuilder.activeAlerts--;
+            AlertBuilder.updateDisplay();
+        }
+
+        /**
+         * Start the timer for 'Acknowledge' alerts.
+         */
+        startTimer() {
+            if (this.type === 'Acknowledge' && typeof this.timer === 'number') {
+                const countdown = document.createElement('span');
+                countdown.textContent = this.timer;
+                this.alertElement.appendChild(countdown);
+
+                const interval = setInterval(() => {
+                    countdown.textContent = --this.timer;
+                    if (this.timer <= 0) {
+                        clearInterval(interval);
+                        const acknowledgeButton = document.createElement('button');
+                        acknowledgeButton.textContent = 'Acknowledge';
+                        acknowledgeButton.className = 'btn btn-danger btn-sm';
+                        acknowledgeButton.addEventListener('click', () => {
+                            this.alertElement.remove();
+                            if (this.callback) {
+                                this.callback(...this.callbackParams);
+                            }
+                        });
+                        this.alertElement.replaceChild(acknowledgeButton, countdown);
+                    }
+                }, 1000);
+            }
+        }
+
+        /**
+         * Update the alert display, handling queue and additional alert message.
+         */
+        static updateDisplay() {
+            if (AlertBuilder.activeAlerts < 3 && AlertBuilder.alertQueue.length > 0) {
+                const nextAlert = AlertBuilder.alertQueue.shift();
+                document.getElementById('alertContainer').appendChild(nextAlert.alertElement);
+                AlertBuilder.activeAlerts++;
+                if (nextAlert.type === 'Acknowledge') nextAlert.startTimer();
+            }
+
+            if (AlertBuilder.additionalAlertElement) {
+                AlertBuilder.additionalAlertElement.remove();
+            }
+
+            if (AlertBuilder.alertQueue.length > 0) {
+                AlertBuilder.additionalAlertElement = document.createElement('div');
+                AlertBuilder.additionalAlertElement.className = 'alert fade show d-flex align-items-center alert-info additional-alert-message';
+
+                const createElement = (type, classNames, text) => {
+                    const element = document.createElement(type);
+                    element.className = classNames;
+                    element.textContent = text;
+                    return element;
+                };
+
+                const iconSpan = createElement('span', 'material-symbols-outlined me-2', 'info');
+                const messageDiv = createElement('div', 'flex-grow-1', `There are ${AlertBuilder.alertQueue.length} additional alerts.`);
+
+                AlertBuilder.additionalAlertElement.append(iconSpan, messageDiv);
+                document.getElementById('alertContainer').appendChild(AlertBuilder.additionalAlertElement);
+            }
+
+        }
+
+        /**
+         * Handles errors by logging them to the console and displaying an alert.
+         * @param {Error} error - The error object containing the details of the error.
+         */
+        static handleError(error) {
+            console.log(`Error: ${error.message}`);
+            console.log(`Stack: ${error.stack}`);
+            new AlertBuilder('Error', `${error.message}`).build();
+        }
+
+        static showToast(message, delay = 2000) {
+            console.log('Creating toast');
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast element
+            const toastElement = document.createElement('div');
+            toastElement.className = 'toast';
+            toastElement.setAttribute('role', 'alert');
+            toastElement.innerHTML = `
+                                    <div class="toast-header">
+                                        <img src="https://raw.githubusercontent.com/AnthonyBahl/CoachingConfig/main/logo.png" height="16" width="16" class="rounded me-2">
+                                        <strong class="me-auto">Coaching Configuration</strong>
+                                        <small>Moments ago...</small>
+                                        <button type="button" class="btn-close" aria-label="Close"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${message}
+                                    </div>`;
+
+            // Append to container
+            toastContainer.appendChild(toastElement);
+
+            // This is where we use Bootstrap to show the toast
+            var bootstrapToast = new bootstrap.Toast(toastElement, {
+                autohide: delay > 0,
+                delay: delay
+            });
+            bootstrapToast.show();
+
+            // Initialize time elapsed
+            let timeElapsed = 0;
+            let timeElement = toastElement.querySelector('small');
+
+            // Update time elapsed every minute
+            const intervalId = setInterval(() => {
+                timeElapsed++;
+                if (timeElapsed < 60) {
+                    timeElement.textContent = `${timeElapsed} min ago`;
+                } else if (timeElapsed >= 60 && timeElapsed < 1440) {
+                    timeElement.textContent = `${Math.floor(timeElapsed / 60)} hr ago`;
+                } else if (timeElapsed >= 1440 && timeElapsed < 525600) {
+                    timeElement.textContent = `${Math.floor(timeElapsed / 1440)} day(s) ago`;
+                } else {
+                    timeElement.textContent = `Ages ago...`;
+                    clearInterval(intervalId);
+                }
+            }, 60000);
+
+            // Handle close button click
+            toastElement.querySelector('.btn-close').addEventListener('click', () => {
+                toastElement.remove();
+                clearInterval(intervalId);
+            });
+
+            // Autohide after delay if specified
+            if (delay > 0) {
+                setTimeout(() => {
+                    toastElement.remove();
+                    clearInterval(intervalId);
+                }, delay);
+            }
+        }
+    }
+</script>

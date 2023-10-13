@@ -1,0 +1,1144 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <h4>All Expectations</h4>
+        </div>
+        <div class="col-5 text-end">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+        </div>
+        <div class="form-check form-switch col-2 align-items-end">
+            <label class="form-check-label" for="flexSwitchCheckDefault">
+                Archives
+            </label>
+            <input class="form-check-input" type="checkbox" role="switch" id="archiveSwitch">
+        </div>
+        <div class="col-2 text-center">
+            <button id="add-button" type="button" class="btn btn-success">
+                <span class="material-symbols-outlined align-middle">add</span>
+                <span class="align-middle">Add</span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Info/Calculator -->
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="copy" viewBox="0 -960 960 960">
+        <path
+            d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" />
+    </symbol>
+    <symbol id="ChevronRight" viewbox="0 -960 960 960">
+        <path d="m517.847-480-184-184L376-706.153 602.153-480 376-253.847 333.847-296l184-184Z"/>
+    </symbol>
+</svg>
+<div id="calculatorSection" class="bd-callout bd-callout-info d-none">
+    <button class="btn-close float-end" aria-label="Close"></button>
+    <h4 class="mb-2">Coaching Calculator</h4>
+    <p><strong>Instructions:</strong> Values entered as expectations indicate the number of
+        coachings per 160 hours. For assistance calculating that value, use the calculator below.
+    </p>
+    <div class="row">
+        <div class="col-4">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Agent's Weekly Hours</span>
+                <input class="form-control" type="number" id="weeklyHours" min="1" step="1">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Desired Monthly Coachings</span>
+                <input class="form-control" type="number" id="monthlyCoachings" min="0" step="1">
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary mb-3" id="calculateBtn">Calculate</button>
+    <div id="outputBox"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.btn-close').click(function () {
+            $(this).closest('.bd-callout').addClass('d-none');
+        });
+
+
+        $('#calculateBtn').click(function () {
+            const weeklyHours = parseFloat($('#weeklyHours').val());
+            const monthlyCoachings = parseFloat($('#monthlyCoachings').val());
+
+            if (isNaN(weeklyHours) || isNaN(monthlyCoachings)) {
+                new AlertBuilder('Error', "Please enter valid numbers in both fields.").build();
+                return;
+            }
+
+            const coachingsPer160Hours = (160 / (weeklyHours * 4)) * monthlyCoachings;
+
+            // Generate inner HTML for the output box
+            const outputHTML = `<div class="container-fluid>
+                                                            <div class="row">
+                                                            <div class="col-5">
+                                                                <div class="input-group mb-3">
+                                                                    <span class="input-group-text">Coachings every 160 Hours: </span>
+                                                                    <input type="text" class="form-control" value="${coachingsPer160Hours.toFixed(2)}" readonly>
+                                                                    <button class="btn btn-outline-secondary" id="copyBtn"><svg height="24" width="24"><use xlink:href="#copy" /></svg></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>`;
+
+            $('#outputBox').html(outputHTML);
+
+            // Use event delegation for the dynamic button
+            $(document).on('click', '#copyBtn', function () {
+                const copyText = $(this).prevAll('input').first();
+                copyText.select();
+                document.execCommand("copy");
+                AlertBuilder.showToast('Copied!', 4000);
+            });
+
+        });
+    });
+</script>
+<!-- Info/Calculator End -->
+<div class="bd-callout bd-callout-info small">
+    <button class="btn-close float-end" aria-label="Close"></button>
+    <ul>
+        <li>
+            <strong>Agent:</strong> Specific to only that agent.
+        </li>
+        <li>
+            <strong>Workgroup:</strong> Applies to agents in the immediate workgroup.
+        </li>
+        <li>
+            <strong>Job Profile:</strong> Applies to agents with this job profile.
+        </li>
+        <li>
+            <strong>Default:</strong> Applies to agents without the above expectations.
+        </li>
+    </ul>
+    <ul><li><strong>Priority (highest to lowest):</strong> Agent &#8250; Workgroup &#8250; Job Profile &#8250; Default.</li></ul>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover mt-3">
+        <thead>
+            <th scope="col">Type</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="text-center">Performance</th>
+            <th scope="col" class="text-center">1-to-1</th>
+            <th scope="col" class="text-center">
+                Side-by-side
+                <sup data-bs-toggle="tooltip" title="Click here for info.">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 -960 960 960" width="15"
+                        style="fill: var(--bs-primary);">
+                        <path
+                            d="M478-240q21 0 35.5-14.5T528-290q0-21-14.5-35.5T478-340q-21 0-35.5 14.5T428-290q0 21 14.5 35.5T478-240Zm-36-154h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                </sup>
+            </th>
+            <th scope="col" class="text-center">Start Date</th>
+            <th scope="col" class="text-center">End Date</th>
+            <th scope="colgroup" colspan="2">Actions</th>
+        </thead>
+        <tbody id="newAdds"></tbody>
+        <tbody id="changes"></tbody>
+        <tbody id="searchResults"></tbody>
+    </table>
+</div>
+<template id="newAddsTemplate">
+    <tr>
+        <td class="type">
+            <select class="form-select expectation-type-input">
+                <!-- JavaScript will populate this -->
+            </select>
+        </td>
+        <td class="name">
+            <div class="d-flex justify-content-center">
+                <input type="text" class="form-control text-center name-input" min="0" step="0.001" disabled>
+                <datalist class="data-list"></datalist>
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center performance-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center oneToOne-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center sideBySide-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="startDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control startDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td class="endDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control endDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-success save-button" disabled>Save</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-dark cancel-button">Cancel</button>
+        </td>
+    </tr>
+</template>
+<template id="changeRowTemplate">
+    <tr>
+        <td class="type"></td>
+        <td class="name"></td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center performance-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center oneToOne-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <input type="number" class="form-control text-center sideBySide-input" min="0" step="0.001"
+                    style="width: 100px;" />
+            </div>
+        </td>
+        <td class="startDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control startDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td class="endDate text-center">
+            <div class="d-flex justify-content-center">
+                <input type="date" class="form-control endDate-input" style="width: 140px;" />
+            </div>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-success save-button">Save</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-dark cancel-button">Cancel</button>
+        </td>
+    </tr>
+</template>
+<template id="searchRowTemplate">
+    <tr>
+        <td class="type"></td>
+        <td class="name"></td>
+        <td class="performance text-center"></td>
+        <td class="oneToOne text-center"></td>
+        <td class="sideBySide text-center"></td>
+        <td class="startDate text-center"></td>
+        <td class="endDate text-center"></td>
+        <td>
+            <button type="button" class="btn btn-outline-primary edit-button">Edit</button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger archive-button">Archive</button>
+        </td>
+    </tr>
+</template>
+<script>
+    (function () {
+
+        /**
+         * Initializes the Bootstrap tooltip and toggles the visibility of the calculator section when the document is ready.
+         * @returns {void}
+         */
+        $(document).ready(function () {
+            // Initialize Bootstrap tooltip
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Toggle visibility of #calculatorSection
+            $('sup').click(function () {
+                $('#calculatorSection').toggleClass('d-none');
+            });
+        });
+
+
+        const expectationData = [];
+
+        /**
+         * Retrieves the expectation data from the database and builds an array of rows to display in the search results box.
+         * Uses the `getResourceName` function to get the name of the resource associated with each expectation.
+         * Calls the `search` function to filter and display the expectation data.
+         * @throws {Error} - If an error occurs while retrieving the expectation data or getting the resource name.
+         * @returns {void}
+         */
+        const getExpectationData = () => {
+            try {
+                expectationData.length = 0;
+
+                Object.entries(DATABASE.DATA.expectationData).forEach(
+                    ([id, { expectationType, resourceId, performance, oneToOne, sideBySide, startDate, endDate, active }]) => {
+
+                        let resourceName;
+
+                        try {
+                            resourceName = DATABASE.getResourceName(resourceId, expectationType);
+                        } catch (error) {
+                            AlertBuilder.handleError(error);
+                            return; // Skip the rest of the iteration if an error occurs
+                        }
+
+                        // Build the row inline and push it into the array
+                        const tempRow = [id, expectationType, resourceName, performance, oneToOne, sideBySide, formatDate(startDate), formatDate(endDate), resourceId, active];
+
+                        expectationData.push(tempRow);
+                    }
+                );
+
+                search();
+
+            } catch (e) {
+                AlertBuilder.handleError(e);
+            }
+        };
+
+        // Call to immediately initialize
+        getExpectationData();
+
+        /**
+         * Formats a date object as an ISO string with only the date portion.
+         * @param {Date} date - The date object to format.
+         * @returns {string} - The formatted date string in the format "YYYY-MM-DD".
+         */
+        function formatDate(date) {
+            return new Date(date).toISOString().split('T')[0];
+        }
+
+        /**
+         * Updates the search results box with filtered expectation data.
+         * Filters the expectationData array based on the archive switch and changes box status,
+         * sorts the filtered data by start date, and appends the filtered data to the search results box.
+         * @param {Array} dataArray - The expectationData array to filter and display.
+         * @throws {Error} - If any required DOM elements or button elements are not found.
+         * @returns {void}
+         */
+        function updateResultsBox(dataArray) {
+            try {
+                const archiveSwitch = document.getElementById('archiveSwitch');
+                const changesBox = document.getElementById('changes');
+                const searchResultsBox = document.getElementById("searchResults");
+                const templateRow = document.getElementById("searchRowTemplate").content;
+
+                if (!archiveSwitch || !changesBox || !searchResultsBox || !templateRow) {
+                    throw new Error('Required DOM elements not found');
+                }
+
+                const isArchiveSwitchChecked = archiveSwitch.checked;
+
+                const filteredData = dataArray.filter(row => isArchiveSwitchChecked || row[9])
+                    .filter(row => !isRowInChangesBox(row[0], changesBox))
+                    .sort((a, b) => b[6].localeCompare(a[6]))
+                    .slice(0, 12);
+
+                searchResultsBox.innerHTML = '';
+
+                for (const rowData of filteredData) {
+                    appendRowToSearchResults(rowData, templateRow, searchResultsBox);
+                }
+
+            } catch (err) {
+                AlertBuilder.handleError(err);
+                throw err;
+            }
+
+            /**
+             * Determines whether a given expectation ID is already in the changes box.
+             * @param {string} expectationId - The expectation ID to check.
+             * @param {HTMLElement} changesBox - The changes box element to search.
+             * @returns {boolean} - True if the expectation ID is already in the changes box, false otherwise.
+             */
+            function isRowInChangesBox(expectationId, changesBox) {
+                const existingIds = Array.from(changesBox.querySelectorAll('tr')).map(tr => tr.dataset.expectationId);
+                return existingIds.includes(expectationId);
+            }
+
+            /**
+             * Appends a new row to the search results box based on the given expectation data.
+             * Populates the cells of the new row with the expectation data, and updates the edit and archive buttons.
+             * @param {Array} rowData - The expectation data to display in the new row.
+             * @param {HTMLElement} templateRow - The template row element to clone.
+             * @param {HTMLElement} searchResultsBox - The search results box element to append the new row to.
+             * @throws {Error} - If any required button elements are not found.
+             * @returns {void}
+             */
+            function appendRowToSearchResults(rowData, templateRow, searchResultsBox) {
+                const tr = templateRow.cloneNode(true);
+                const expectationId = rowData[0];
+                tr.querySelector('tr').dataset.expectationId = expectationId;
+
+                populateCells(tr, rowData);
+
+                updateButtons(tr, rowData, expectationId);
+
+                searchResultsBox.appendChild(tr);
+            }
+
+            /**
+             * Populates the cells of a given row with the corresponding data from an expectation data row.
+             * @param {HTMLElement} tr - The row element to populate.
+             * @param {Array} rowData - The expectation data row to get the cell data from.
+             * @returns {void}
+             */
+            function populateCells(tr, rowData) {
+                ['type', 'name', 'performance', 'oneToOne', 'sideBySide', 'startDate', 'endDate'].forEach((className, index) => {
+                    tr.querySelector(`.${className}`).textContent = rowData[index + 1];
+                });
+            }
+
+            /**
+             * Updates the edit and archive buttons of a given row based on the corresponding expectation data.
+             * If the expectation is archived, the edit button is replaced with a re-activate button.
+             * @param {HTMLElement} tr - The row element to update the buttons for.
+             * @param {Array} rowData - The expectation data row to get the button data from.
+             * @param {string} expectationId - The ID of the expectation data row.
+             * @throws {Error} - If any required button elements are not found.
+             * @returns {void}
+             */
+            function updateButtons(tr, rowData, expectationId) {
+                try {
+                    const editButton = tr.querySelector('.edit-button');
+                    const archiveButton = tr.querySelector('.archive-button');
+
+                    if (!editButton || !archiveButton) {
+                        throw new Error('Required button elements not found');
+                    }
+
+                    if (rowData[9] === false) {
+                        editButton.classList.remove('edit-button', 'btn-outline-primary');
+                        editButton.classList.add('btn-outline-success', 'reActivate-button');
+                        editButton.dataset.expectationId = expectationId;
+                        editButton.textContent = 'Re-Activate';
+                        editButton.addEventListener('click', handleReActivateButton);
+                        archiveButton.remove();
+                    } else {
+                        editButton.dataset.expectationId = expectationId;
+                        editButton.addEventListener('click', handleEditButton);
+                        archiveButton.dataset.expectationId = expectationId;
+                        archiveButton.addEventListener('click', handleArchiveButton);
+                    }
+
+                } catch (err) {
+                    AlertBuilder.handleError(err);
+                    throw err;
+                }
+            }
+        }
+
+        /**
+         * Searches the expectationData array for rows that match the user's search input.
+         * Fetches and tokenizes the user's search input, validates and filters the expectationData array based on search input,
+         * and updates the display with filtered results.
+         * @throws {Error} - If the search input element is not found.
+         * @returns {void}
+         */
+        function search() {
+            try {
+                // Fetch and tokenize the user's search input
+                const searchInput = document.getElementById("searchInput");
+                if (!searchInput) throw new Error('Search input element not found.');
+
+                const userInput = searchInput.value.trim();
+                const searchTerms = tokenizeInput(userInput);
+
+                // Validate and filter the expectationData array based on search input
+                const filteredExpectations = filterData(expectationData, searchTerms);
+
+                // Update the display with filtered results
+                updateResultsBox(filteredExpectations);
+            } catch (err) {
+                AlertBuilder.handleError(err);
+                throw err;
+            }
+
+            /**
+             * Tokenizes the user's search input by splitting it into an array of lowercase terms.
+             * @param {string} input - The user's search input.
+             * @returns {string[]} - An array of lowercase search terms.
+             */
+            function tokenizeInput(input) {
+                return input.toLowerCase().split(" ").filter(term => term.length > 0);
+            }
+
+            /**
+             * Filters the expectationData array based on the user's search input.
+             * @param {Array} data - The expectationData array to filter.
+             * @param {string[]} terms - The search terms to filter by.
+             * @returns {Array} - An array of filtered expectationData rows.
+             */
+            function filterData(data, terms) {
+                return data.filter(row => terms.every(term => matchTerm(row, term)));
+            }
+
+            /**
+             * Determines whether a given row matches a given search term.
+             * @param {Array} row - The expectationData row to match against.
+             * @param {string} term - The search term to match.
+             * @returns {boolean} - True if the row matches the search term, false otherwise.
+             */
+            function matchTerm(row, term) {
+                if (isIDSearchPattern(term)) {
+                    return row[0] === extractIDFromTerm(term);
+                }
+                return ['Type', 'Name'].some((key, index) => String(row[index + 1]).toLowerCase().includes(term));
+            }
+
+            /**
+             * Determines whether a given search term is an ID search pattern.
+             * @param {string} term - The search term to check.
+             * @returns {boolean} - True if the search term is an ID search pattern, false otherwise.
+             */
+            function isIDSearchPattern(term) {
+                return term.startsWith("id{") && term.endsWith("}");
+            }
+
+            /**
+             * Extracts the ID from an ID search pattern.
+             * @param {string} term - The ID search pattern to extract from.
+             * @returns {string} - The extracted ID.
+             */
+            function extractIDFromTerm(term) {
+                return term.slice(3, -1);
+            }
+        }
+
+        /* Start of Validator classes, each class validates a different type of field. */
+        /**
+         * Abstract base class for all validators.
+         * @class
+         * @abstract
+         */
+        class Validator {
+            /**
+             * Validates the input field value.
+             * @abstract
+             * @param {HTMLInputElement} field - The input field to validate.
+             * @returns {boolean} - True if the input field value is valid, false otherwise.
+             * @throws {Error} - If the method is not implemented in a subclass.
+             */
+            validate(field) {
+                throw new Error("Abstract method!");
+            }
+        }
+
+        /**
+         * Validator for the coaching number input field.
+         * @class
+         * @extends Validator
+         */
+        class CoachingNumberValidator extends Validator {
+            /**
+             * Validates the coaching number input field value.
+             * @param {HTMLInputElement} field - The coaching number input field to validate.
+             * @returns {boolean} - True if the coaching number input field value is valid, false otherwise.
+             */
+            validate(field) {
+                const value = parseFloat(field.value);
+                return isNaN(value) || value < 0;
+            }
+        }
+
+        /**
+         * Validator for the start date input field.
+         * @class
+         * @extends Validator
+         */
+        class StartDateValidator extends Validator {
+            /**
+             * Validates the start date input field value.
+             * @param {HTMLInputElement} field - The start date input field to validate.
+             * @returns {boolean} - True if the start date input field value is valid, false otherwise.
+             */
+            validate(field) {
+                const startDateValue = new Date(field.value);
+                const endDateValue = new Date(field.closest('tr').querySelector('.endDate-input').value);
+                return isNaN(startDateValue) || startDateValue.getFullYear() < 1990 || startDateValue > endDateValue;
+            }
+        }
+
+        /**
+         * Validator for the end date input field.
+         * @class
+         * @extends Validator
+         */
+        class EndDateValidator extends Validator {
+            /**
+             * Validates the end date input field value.
+             * @param {HTMLInputElement} field - The end date input field to validate.
+             * @returns {boolean} - True if the end date input field value is valid, false otherwise.
+             */
+            validate(field) {
+                const endDateValue = new Date(field.value);
+                const startDateValue = new Date(field.closest('tr').querySelector('.startDate-input').value);
+                return isNaN(endDateValue) || endDateValue.getFullYear() > 3000 || endDateValue < startDateValue;
+            }
+        }
+
+        /**
+         * A validator class for validating the type field of an expectation form.
+         * Extends the `Validator` class and overrides the `validate` method to check if the type field is not empty.
+         * @extends Validator
+         */
+        class TypeValidator extends Validator {
+            /**
+             * Validates the type field of an expectation form.
+             * @param {HTMLInputElement} field - The type field to validate.
+             * @returns {boolean} - True if the type field is not empty, false otherwise.
+             */
+            validate(field) {
+                return !DATABASE.expectationTypes.includes(field.value);
+            }
+        }
+
+        /**
+         * A validator class for validating the name field of an expectation form.
+         * Extends the `Validator` class and overrides the `validate` method to check if the name field is valid based on the expectation type.
+         * @extends Validator
+         */
+        class NameValidator extends Validator {
+            /**
+             * Validates the name field of an expectation form based on the expectation type.
+             * @param {HTMLInputElement} field - The name field to validate.
+             * @returns {boolean} - True if the name field is valid based on the expectation type, false otherwise.
+             * @throws {Error} - If an error occurs while validating the name field.
+             */
+            validate(field) {
+                try {
+                    const value = field.value;
+                    const type = field.closest('tr').querySelector('.expectation-type-input').value;
+                    return DATABASE.getResourceNames(type).includes(value) ? false : true;
+                } catch (err) {
+                    AlertBuilder.handleError(err); // Defensive coding: Handle errors
+                    throw err;
+                }
+            }
+
+            /**
+             * Determines whether a given value is in a given database based on a filter function.
+             * @param {string} value - The value to search for in the database.
+             * @param {Object} data - The database to search in.
+             * @param {Function} filterFn - The filter function to apply to the database items before searching.
+             * @returns {boolean} - True if the value is in the database, false otherwise.
+             */
+            isValueInDatabase(value, data, filterFn = () => true) {
+                return Object.entries(data)
+                    .filter(([_, item]) => filterFn(item))
+                    .some(([id, item]) => `${item.name} (${id})` === value);
+            }
+        }
+
+        /* End of Validator classes. */
+
+        /**
+         * A factory object for creating validator objects based on the specified validator type.
+         * @typedef {Object} ValidatorFactory
+         * @property {function} createValidator - A function that creates a validator object based on the specified validator type.
+         * @throws {Error} Invalid validator type.
+         */
+        const validatorFactory = {
+            /**
+             * Creates a validator object based on the specified validator type.
+             * @param {string} type - The type of validator to create.
+             * @returns {Validator} A validator object.
+             * @throws {Error} Invalid validator type.
+             */
+            createValidator(type) {
+                switch (type) {
+                    case "CoachingNumber":
+                        return new CoachingNumberValidator();
+                    case "StartDate":
+                        return new StartDateValidator();
+                    case "EndDate":
+                        return new EndDateValidator();
+                    case "Type":
+                        return new TypeValidator();
+                    case "Name":
+                        return new NameValidator();
+                    default:
+                        throw new Error("Invalid validator type!");
+                }
+            }
+        };
+
+        /**
+         * Validates the value of an input field based on the specified validator type.
+         * Adds or removes the "is-invalid" class from the input field based on the validation status.
+         * Calls the `validateRow` function with the closest row element to the input field.
+         * @param {Event} e - The change event object.
+         * @param {string} validatorType - The type of validator to use for the input field value.
+         * @returns {void}
+         */
+        function validateField(e, validatorType) {
+            const field = e.target;
+            const validator = validatorFactory.createValidator(validatorType);
+
+            if (validator.validate(field)) {
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+            const closestRow = field.closest('tr');
+            validateRow(closestRow);
+        }
+
+        /**
+         * Validates the input fields in a row of the changes box.
+         * Enables or disables the save button for the row based on the validation status of the input fields.
+         * @param {HTMLElement} row - The row element to validate.
+         * @returns {void}
+         */
+        function validateRow(row) {
+            console.log("triggered");
+            const saveButton = row.querySelector('.save-button');
+            const inputs = row.querySelectorAll('input');
+
+            const validated = Array.from(inputs).every(input => !input.classList.contains('is-invalid') && input.value.length > 0);
+
+            if (validated) {
+                toggleFieldsDisableStatus([saveButton], false);
+            } else {
+                toggleFieldsDisableStatus([saveButton], true);
+            }
+        }
+
+        /**
+         * Handles a change event for a form field by delaying the validation of the field by a quarter second.
+         * This delay allows the user a brief moment to finish typing before the validation function is called, which can help improve the user experience.
+         * Calls the `validateField` function after the delay with the event object and the validator type as parameters.
+         * @param {Event} e - The change event object.
+         * @param {string} validatorType - The type of validator to use for the field validation.
+         * @returns {void}
+         */
+        function handleFieldChange(e, validatorType) {
+            // Any actions that need to happen prior to validation could be placed here
+            setTimeout(() => {
+                validateField(e, validatorType);
+            }, 250);
+        }
+
+        /**
+         * Handles the click event on the "Cancel" button in the changes box.
+         * Fades out the changes box and calls the `search` function to refresh the expectation data.
+         * @param {Event} e - The click event object.
+         * @returns {void}
+         */
+        function handleCancelButton(e) {
+            fadeOutRow(e.target);
+            search();
+        }
+
+        /**
+         * Handles the click event on the "Edit" button for an expectation.
+         * Retrieves the expectation data from the `DATABASE` object using the `expectationId` from the button's dataset.
+         * Populates the changes box with a new row containing input fields for each editable field of the expectation.
+         * Sets the initial values of the input fields to the current values of the expectation.
+         * Adds event listeners to the input fields to handle changes to their values.
+         * Adds event listeners to the save and cancel buttons to handle saving or discarding changes.
+         * @param {Event} e - The click event object.
+         * @returns {void}
+         */
+        function handleEditButton(e) {
+            const { dataset: { expectationId } } = e.target;
+            const expectationData = DATABASE.DATA.expectationData[expectationId];
+
+            if (!expectationData) {
+                AlertBuilder.handleError(new Error(`Could not find expectation id # ${expectationId}`));
+                return;
+            }
+
+            try {
+                const {
+                    resourceId,
+                    expectationType,
+                    performance,
+                    oneToOne,
+                    sideBySide,
+                    startDate,
+                    endDate
+                } = expectationData;
+
+                const resourceName = DATABASE.getResourceName(resourceId, expectationType);
+
+                // Create new row in changesBox
+                const changesBox = document.getElementById("changes");
+                const template = document.getElementById("changeRowTemplate").content.cloneNode(true);
+                const newRow = template.querySelector('tr');
+                newRow.dataset.expectationId = expectationId;
+
+                const setInputValue = (selector, value) => newRow.querySelector(selector).value = `${value}`;
+
+                newRow.querySelector('.type').textContent = expectationType;
+                newRow.querySelector('.name').textContent = resourceName;
+
+                setInputValue('.performance-input', performance);
+                setInputValue('.oneToOne-input', oneToOne);
+                setInputValue('.sideBySide-input', sideBySide);
+                setInputValue('.startDate-input', formatDate(startDate));
+                setInputValue('.endDate-input', formatDate(endDate));
+
+                const addEventListenerToInput = (selector, eventName) => newRow.querySelector(selector).addEventListener('change', (e) => handleFieldChange(e, eventName));
+
+                addEventListenerToInput('.performance-input', 'CoachingNumber');
+                addEventListenerToInput('.oneToOne-input', 'CoachingNumber');
+                addEventListenerToInput('.sideBySide-input', 'CoachingNumber');
+                addEventListenerToInput('.startDate-input', 'StartDate');
+                addEventListenerToInput('.endDate-input', 'EndDate');
+
+                const saveButton = newRow.querySelector('.save-button');
+                saveButton.addEventListener('click', handleSaveButton);
+                saveButton.dataset.expectationId = expectationId;
+                newRow.querySelector('.cancel-button').addEventListener('click', handleCancelButton);
+
+                changesBox.appendChild(newRow);
+                search();
+            } catch (error) {
+                AlertBuilder.handleError(error);
+            }
+        }
+
+        /**
+         * Handles the click event on the "Archive" button for an expectation.
+         * Disables the edit button and shows a spinner on the archive button while the expectation is being archived.
+         * Calls the `setExpectationActiveStatus` method of the `DATABASE` object to set the active status of the expectation to `false`.
+         * If the operation is successful, calls the `getExpectationData` function to refresh the expectation data.
+         * If the operation fails, resets the buttons to their original state.
+         * @param {Event} e - The click event object.
+         * @returns {void}
+         */
+        function handleArchiveButton(e) {
+            const archiveButton = e.target,
+                parentRow = archiveButton.closest('tr'),
+                editButton = parentRow.querySelector('.edit-button');
+            try {
+                // Disable the editButton & clear archiveButton
+                toggleFieldsDisableStatus([editButton], true);
+                archiveButton.innerHTML = '';
+                createSpinner(archiveButton);
+                const isArchived = DATABASE.setExpectationActiveStatus(
+                    archiveButton.dataset.expectationId,
+                    false,
+                    function () { // Success handler
+                        getExpectationData();
+                    },
+                    function () { // Failure handler
+                        resetButtons();
+                    }
+                );
+                // only re-enable the editButton & reset archiveButton in case of failure
+                if (!isArchived) resetButtons();
+            } catch (error) {
+                resetButtons();
+                console.error('DATABASE operation failed:', error);
+            }
+            function resetButtons(label) {
+                archiveButton.innerHTML = 'Archive';
+                toggleFieldsDisableStatus([editButton], false);
+            }
+        }
+
+
+        /**
+         * Toggles the 'disabled' status of form fields.
+         * @param {NodeList} fields - The list of form fields to toggle.
+         * @param {boolean} [disable=true] - Whether to disable or enable the fields.
+         */
+        function toggleFieldsDisableStatus(fields, disable = true) {
+            fields.forEach((field) => {
+                // Toggle the 'disabled' class
+                field.classList.toggle('disabled', disable);
+
+                // Set the 'disabled' attribute
+                field.disabled = disable;
+            });
+        }
+
+        /**
+         * Fades out a table row and removes it from the DOM.
+         *
+         * @param {HTMLElement} element - The HTML element within the row to target for fading out.
+         */
+        function fadeOutRow(element) {
+            const parentRow = $(element).closest('tr');
+            parentRow.fadeOut('slow', () => parentRow.remove());
+        }
+
+        /**
+         * Handles the click event for the save button in an expectation row.
+         * @param {Event} e - The click event object.
+         * @returns {void}
+         */
+        function handleSaveButton(e) {
+            const saveButton = e.target;
+            const parentRow = saveButton.closest('tr');
+            const fields = parentRow.querySelectorAll('.performance-input, .oneToOne-input, .sideBySide-input, .startDate-input, .endDate-input');
+            createSpinner(saveButton);
+            const expectationId = saveButton.dataset.expectationId;
+
+            // If the expectationId is null, then this is a new expectation
+            const expectation = expectationId ? DATABASE.DATA.expectationData[expectationId] : {};
+            toggleFieldsDisableStatus(fields);
+
+            // Get the values from the form fields and assign them to the expectation object
+            const values = Array.from(fields).reduce((acc, field) => {
+                const fieldName = (field.classList.value.match(/\b\w+-input\b/) || [])[0]?.split('-')[0];
+                if (!fieldName) return acc;
+
+                const fieldValue = field.value, parsedValue = parseFloat(fieldValue);
+                acc[fieldName] = ['startDate', 'endDate'].includes(fieldName) ? fieldValue : (!isNaN(parsedValue) ? parsedValue : fieldValue);
+
+                return acc;
+            }, {});
+            Object.assign(expectation, values);
+
+            // If this is a new expectation, then also get the values from the name and type fields
+            if (parentRow.closest('tbody').id === 'newAdds') {
+                const [typeField, nameField] = parentRow.querySelectorAll('.expectation-type-input, .name-input');
+                toggleFieldsDisableStatus([typeField, nameField]);
+                expectation.expectationType = typeField.value;
+                expectation.active = true;
+                const resourceId = parseResourceId(nameField.value, expectation.expectationType);
+                if (resourceId !== null) {
+                    expectation.resourceId = resourceId;
+                }
+
+                DATABASE.addExpectation(expectation, () => onSuccessHandler(e), () => onFailureHandler(e, [typeField, nameField, ...fields]));
+            } else {    // Otherwise, update the existing expectation
+                DATABASE.updateExpectation(expectationId, expectation, () => onSuccessHandler(e), () => onFailureHandler(e, fields));
+            }
+
+            /**
+             * Handles the success event for the expectation form submission.
+             * Fades out the row associated with the submitted expectation and calls the `getExpectationData` function to update the search results box.
+             * @param {Event} e - The success event object.
+             * @returns {void}
+             */
+            function onSuccessHandler(e) {
+                fadeOutRow(e.target);
+                getExpectationData();
+            }
+
+            /**
+             * Handles the failure event for the expectation form submission.
+             * Toggles the disabled status of the form fields and buttons, updates the submit button text, and enables the cancel button.
+             * @param {Event} e - The failure event object.
+             * @param {HTMLElement[]} fields - An array of form fields and buttons to toggle the disabled status of.
+             * @returns {void}
+             */
+            function onFailureHandler(e, fields) {
+                toggleFieldsDisableStatus(fields, false);
+                e.target.innerHTML = 'Save';
+                const parentRow = e.target.closest('tr');
+                const cancelButton = parentRow.querySelector('.cancel-button');
+                toggleFieldsDisableStatus([cancelButton], false);
+            }
+
+            /**
+             * Parse the Resource ID from the given name value based on the expectation type.
+             *
+             * @param {string} nameValue - The name value to be parsed for a Resource ID.
+             * @param {string} expectationType - The type of expectation, used to determine how to parse the name.
+             * @returns {number|null} The parsed Resource ID, or -1 if the expectationType is 'Default', or null if parsing fails.
+             */
+            function parseResourceId(nameValue, expectationType) {
+                // Return -1 for 'Default' expectation types
+                if (expectationType === 'Default') {
+                    return -1;
+                }
+
+                // Find the positions of the last opening and closing parentheses
+                const lastOpenParenIndex = nameValue.lastIndexOf('(');
+                const closeParenIndex = nameValue.indexOf(')', lastOpenParenIndex);
+
+                // Check if both opening and closing parentheses exist
+                const parenthesesExist = lastOpenParenIndex !== -1 && closeParenIndex !== -1;
+
+                // Parse and return the Resource ID if parentheses are found
+                if (parenthesesExist) {
+                    const resourceIdStr = nameValue.substring(lastOpenParenIndex + 1, closeParenIndex);
+                    return parseInt(resourceIdStr, 10);
+                }
+
+                // Return null if parsing fails
+                return null;
+            }
+        }
+
+        /**
+         * Handles the click event for the re-activate button.
+         * Retrieves the expectation ID from the button dataset, creates a spinner, and calls the `setExpectationActiveStatus` function to re-activate the expectation.
+         * Calls the `onSuccess` function on success and the `onError` function on error.
+         * @param {Event} event - The click event object.
+         * @returns {void}
+         */
+        const handleReActivateButton = (event) => {
+            const button = event.target;
+            const expectationId = button.dataset.expectationId;
+            if (!expectationId) {
+                // Defensive check for existence of required dataset 
+                console.error("Unable to get expectationId");
+                const error = new Error("Unable to get Expectation ID");
+                AlertBuilder.handleError(error);
+            }
+
+            createSpinner(button); // Optimization and Creating more modular code 
+
+            DATABASE.setExpectationActiveStatus(
+                expectationId,
+                true,
+                () => onSuccess(event), // Optimization
+                () => onError(button)); // Optimization
+
+            /**
+             * Handles the success event for the `setExpectationActiveStatus` function.
+             * Fades out the row associated with the re-activated expectation and calls the `getExpectationData` function to update the search results box.
+             * @param {Event} event - The success event object.
+             * @returns {void}
+             */
+            const onSuccess = (event) => {
+                const buttonElement = event.target;
+                fadeOutRow(buttonElement);
+                getExpectationData();
+            }
+
+            /**
+             * Handles the error event for the `setExpectationActiveStatus` function.
+             * Updates the re-activate button text to "Re-Activate".
+             * @param {HTMLElement} buttonElement - The re-activate button element to update the text for.
+             * @returns {void}
+             */
+            const onError = (buttonElement) => {
+                buttonElement.innerHTML = 'Re-Activate'; // Unexpected event handler 
+            }
+        };
+
+        /**
+         * Creates a spinner element and replaces the content of a given button element with the spinner.
+         * @param {HTMLElement} buttonElement - The button element to replace the content of with the spinner.
+         * @returns {void}
+         */
+        const createSpinner = (buttonElement) => {
+            const spinner = document.createElement('span');
+            spinner.classList.add('spinner-border', 'spinner-border-sm');
+            spinner.setAttribute('role', 'status'); //Using the setAttribute function is more readable and a best practice
+            buttonElement.innerHTML = '';
+            buttonElement.appendChild(spinner);
+        }
+
+        /**
+         * Handles the click event for the add-button by cloning the newAddsTemplate row, configuring its elements, and appending it to the newAdds table.
+         * @returns {void}
+         */
+        function handleAddButton() {
+            try {
+                const tBody = document.getElementById("newAdds");
+
+                if (!tBody) throw new Error("Table body not found");
+
+                const templateRow = document.getElementById("newAddsTemplate").content;
+                const expectationTypes = DATABASE.expectationTypes;
+
+                /**
+                 * Creates an option element with the given value and text.
+                 * @param {string} value - The value of the option element.
+                 * @param {string} text - The text of the option element.
+                 * @returns {HTMLOptionElement} - The created option element.
+                 */
+                const createOptionElement = (value, text) => {
+                    const opt = document.createElement('option');
+                    opt.value = value;
+                    opt.innerText = text;
+                    return opt;
+                };
+
+                /**
+                 * Populates a dropdown element with the given options.
+                 * @param {HTMLSelectElement} dropdown - The dropdown element to populate.
+                 * @param {string[]} options - The options to populate the dropdown with.
+                 * @returns {void}
+                 */
+                const populateDropdown = (dropdown, options) => {
+                    dropdown.innerHTML = '';
+                    dropdown.appendChild(createOptionElement('', '')); // default option
+
+                    options.forEach(option => dropdown.appendChild(createOptionElement(option, option)));
+                };
+
+                // Clone template and get references to elements
+                const clonedRow = templateRow.cloneNode(true);
+                const newRow = clonedRow.querySelector('tr');
+                const dropdown = clonedRow.querySelector('.expectation-type-input');
+                const dataList = clonedRow.querySelector('.data-list');
+                const nameInput = clonedRow.querySelector('.name-input');
+
+                // Generate a unique identifier
+                const uniqueID = `data-list-${Date.now()}`;
+
+                // Configure elements
+                dataList.id = uniqueID;
+                nameInput.setAttribute('list', uniqueID);
+
+                // Populate the dropdown with options
+                populateDropdown(dropdown, expectationTypes);
+
+                // Attach event listeners
+                newRow.querySelector('.expectation-type-input').addEventListener('change', (e) => {
+                    handleFieldChange(e, 'Type');
+                    const type = e.target.value;
+
+                    // Ensure target elements exist
+                    const dataList = e.target.closest('tr').querySelector('.data-list');
+                    const nameInput = e.target.closest('tr').querySelector('.name-input');
+
+                    if (!dataList || !nameInput) return;
+
+                    const options = DATABASE.getResourceNames(type);
+                    populateDropdown(dataList, options);
+                    nameInput.value = type === 'Default' ? 'All Agents' : '';
+                    toggleFieldsDisableStatus([nameInput], type === 'Default');
+                });
+
+                const fields = [
+                    { selector: '.name-input', fieldType: 'Name' },
+                    { selector: '.performance-input', fieldType: 'CoachingNumber' },
+                    { selector: '.oneToOne-input', fieldType: 'CoachingNumber' },
+                    { selector: '.sideBySide-input', fieldType: 'CoachingNumber' },
+                    { selector: '.startDate-input', fieldType: 'StartDate' },
+                    { selector: '.endDate-input', fieldType: 'EndDate' }
+                ];
+
+                // Bind event listeners in a loop
+                fields.forEach(field => {
+                    newRow.querySelector(field.selector).addEventListener('change', (e) => handleFieldChange(e, field.fieldType));
+                });
+
+                newRow.querySelector('.save-button').addEventListener('click', handleSaveButton);
+                newRow.querySelector('.cancel-button').addEventListener('click', handleCancelButton);
+
+                // Append the new row to the table
+                tBody.appendChild(clonedRow);
+
+            } catch (err) {
+                AlertBuilder.handleError(err);
+                throw err;
+            }
+        }
+        document.getElementById("add-button").addEventListener("click", handleAddButton);
+        document.getElementById("searchInput").addEventListener("input", search);
+        document.getElementById("archiveSwitch").addEventListener("change", search);
+        toggleLoader(false);
+    })();
+</script>

@@ -1,0 +1,126 @@
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+<script>
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingOverlay'));
+    // Initialize the coaching Expectations Object
+
+    // Initialize bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+
+    const DATABASE = new myDatabase();
+
+
+    /**
+     * Toggles the visibility of the loader.
+     * @param {boolean} show - Whether to show or hide the loader.
+     */
+    function toggleLoader(show) {
+        if (show) {
+            loadingModal.show(); // Show the modal
+        } else {
+            loadingModal.hide(); // Hide the modal      
+        }
+    }
+
+    /**
+     * Handles the click events for links.
+     * @param {string} htmlFile - html file to load.
+     */
+    async function linkClickHandler(htmlFile) {
+        toggleLoader(true);
+        try {
+            google.script.run
+                .withSuccessHandler(async (html) => {
+                    await updateDiv('app', html);
+                })
+                .withFailureHandler(error => {
+                    AlertBuilder.showToast(`Error: ${error.message}`, 0);
+                    toggleLoader(false);
+                })
+                .include(htmlFile);
+        } catch (err) {
+            console.error(`An error occurred: ${err.message}`);
+            toggleLoader(false);
+        }
+    }
+
+    /**
+     * Updates a div element with new HTML content.
+     * @param {string} id - ID of the target div.
+     * @param {string} html - New HTML content.
+     * @returns {Promise} - Promise that resolves once the div has been updated.
+     */
+    function updateDiv(id, html) {
+        return new Promise(resolve => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const scripts = Array.from(tempDiv.querySelectorAll('script'));
+            scripts.forEach(script => script.remove());
+
+            document.getElementById(id).innerHTML = tempDiv.innerHTML;
+
+            // Re-add and execute JavaScript scripts
+            scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                newScript.innerHTML = script.innerHTML;
+                document.getElementById(id).appendChild(newScript);
+            });
+            resolve();
+        });
+    }
+
+    // Get Reference to Navbar
+    const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+
+    // Add click event listener to each sidebar link
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+
+            // Check if the clicked link should skip the event handler
+            if (e.currentTarget.classList.contains('skip-handler')) {
+                return;
+            }
+
+            // Prevent default link behavior
+            e.preventDefault();
+
+            // Remove active class from all sidebar links
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+
+            // Add active class to clicked sidebar link
+            e.currentTarget.classList.add('active');
+
+            // Switch to the clicked page
+            const page = e.currentTarget.getAttribute('href');
+            page === 'Forms' ? formsClickHandler() : linkClickHandler(page);
+        });
+    });
+
+    async function formsClickHandler() {
+        toggleLoader(true);
+        try {
+            google.script.run
+                .withSuccessHandler(async (html) => {
+                    await updateDiv('app', html);
+                    toggleLoader(false);
+                })
+                .withFailureHandler(error => {
+                    AlertBuilder.handleError(`Error: ${error.message}`, 0);
+                    toggleLoader(false);
+                })
+                .getFormPage();
+        } catch (err) {
+            console.error(`An error occurred: ${err.message}`);
+            toggleLoader(false);
+        }
+    }
+</script>

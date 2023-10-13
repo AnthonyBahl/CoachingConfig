@@ -1,0 +1,478 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="expand" viewBox="0 -960 960 960">
+    <path
+      d="M480-354.232 645.768-520 603-561.768l-123 123-123-123L314.232-520 480-354.232Zm.067 254.231q-78.836 0-148.204-29.92-69.369-29.92-120.682-81.21-51.314-51.291-81.247-120.629-29.933-69.337-29.933-148.173t29.92-148.204q29.92-69.369 81.21-120.682 51.291-51.314 120.629-81.247 69.337-29.933 148.173-29.933t148.204 29.92q69.369 29.92 120.682 81.21 51.314 51.291 81.247 120.629 29.933 69.337 29.933 148.173t-29.92 148.204q-29.92 69.369-81.21 120.682-51.291 51.314-120.629 81.247-69.337 29.933-148.173 29.933ZM480-160q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+  </symbol>
+  <symbol id="collapse" viewBox="0 -960 960 960">
+    <path
+      d="m357-398.232 123-123 123 123L645.768-440 480-605.768 314.232-440 357-398.232Zm123.067 298.231q-78.836 0-148.204-29.92-69.369-29.92-120.682-81.21-51.314-51.291-81.247-120.629-29.933-69.337-29.933-148.173t29.92-148.204q29.92-69.369 81.21-120.682 51.291-51.314 120.629-81.247 69.337-29.933 148.173-29.933t148.204 29.92q69.369 29.92 120.682 81.21 51.314 51.291 81.247 120.629 29.933 69.337 29.933 148.173t-29.92 148.204q-29.92 69.369-81.21 120.682-51.291 51.314-120.629 81.247-69.337 29.933-148.173 29.933ZM480-160q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+  </symbol>
+</svg>
+
+<? if(isEditor) { ?>
+<!-- Add Form Modal -->
+<div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addFormModalLabel">Add Form</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label for="formSelect">Search a form:</label>
+        <select class="selectpicker" data-live-search="true" id="formSelect">
+          <?= generateAddFormList(formList); ?>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="add-form-button" type="button" class="btn btn-primary add-form">Add Form</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize select picker when page loads for add form popup
+  $(document).ready(function () {
+    $('.selectpicker').selectpicker();
+  });
+</script>
+<!-- End Add Form Modal -->
+<? } ?>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <h4>Active Forms</h4>
+    </div>
+    <div class="col-7 text-end">
+      <!-- <input type="text" class="form-control" id="searchInput" placeholder="Search..."> -->
+    </div>
+    <div class="col-2 text-center">
+      <? if (isEditor) { ?>
+      <button id="add-button" type="button" class="btn btn-success">
+        <span class="material-symbols-outlined align-middle">add</span>
+        <span class="align-middle">Add</span>
+      </button>
+      <? } ?>
+    </div>
+  </div>
+</div>
+<hr />
+<table id="formTable" class="table text-sm table-hover">
+  <thead>
+    <tr data-id="' + form.id + '">
+      <th class="text-center" colspan="2">Form ID</th>
+      <th>Form Name</th>
+      <th class="text-center">Version</th>
+      <th class="text-center">Performance Coaching</th>
+      <th class="text-center">1 to 1</th>
+      <th class="text-center">Side by Side</th>
+      <th class="text-center">
+        <? if (isEditor) { ?>Actions
+        <? } ?>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <?= generateFormRows(formData, questionCategories, isEditor); ?>
+  </tbody>
+</table>
+<script>
+  $(document).ready(function () {
+    /**
+     * Toggles the visibility of the question row when the question toggle button is clicked.
+     *
+     * @function
+     * @name toggleQuestionRow
+     * @param {Event} event - The click event.
+     * @returns {void}
+     */
+    const toggleQuestionRow = (target) => {
+      const formRow = target.closest('.form-row');
+      const questionRow = formRow.nextElementSibling;
+      const allQuestionRows = document.querySelectorAll('.question-row:not(.d-none)');
+      allQuestionRows.forEach(row => {
+        if (row !== questionRow) {
+          row.classList.add('d-none');
+          row.previousElementSibling.firstElementChild.querySelector('use').setAttribute('xlink:href', '#expand');
+        }
+      });
+      questionRow.classList.toggle('d-none');
+      formRow.firstElementChild.querySelector('use').setAttribute('xlink:href', formRow.firstElementChild.querySelector('use').getAttribute('xlink:href') === '#expand' ? '#collapse' : '#expand');
+    };
+
+    /**
+     * Filters the question rows based on the selected version.
+     *
+     * @function
+     * @name filterQuestionRows
+     * @param {Event} event - The change event.
+     * @returns {void}
+     */
+    const filterQuestionRows = (event) => {
+      const formRow = event.target.closest('.form-row');
+      const questionRow = formRow.nextElementSibling;
+      const questionsBody = questionRow.querySelector('tbody');
+      const questionRows = questionsBody.querySelectorAll('tr');
+      const version = event.target.value;
+      questionRows.forEach(row => row.classList.toggle('d-none', row.dataset.versionId !== version));
+    };
+
+    /**
+     * Handles Question Save Button Click
+     * @function
+     * @name handleSaveQuestion
+     * @param {Button} button - The button that was clicked
+     * @returns {void}
+     */
+    function handleSaveQuestion(button) {
+      createSpinner(button);
+      const row = button.closest('tr');
+      const id = getID(button);
+      const text = row.querySelector('.question-text');
+      const category = row.querySelector('.category-select');
+      const hidden = row.querySelector('.hidden-check');
+      const fields = [button, text, category, hidden];
+      fields.forEach(field => field.disabled = true);
+      google.script.run
+        .withSuccessHandler(() => {
+          createSaveIcon(button);
+          text.dataset.value = text.value;
+          category.dataset.value = category.value;
+          hidden.dataset.value = hidden.checked.toString();
+          fields.forEach(field => field.disabled = false);
+          AlertBuilder.showToast(`Question ${id} saved successfully!`, 10000);
+          manageQuestionSaveButton(row);
+        })
+        .withFailureHandler((error) => {
+          // Re-enable fields
+          fields.forEach(field => field.disabled = false);
+          AlertBuilder.handleError(error);
+          createSaveIcon(button);
+        })
+        .saveQuestion(id, text.value, category.value, hidden.checked);
+    }
+
+    /**
+     * Handles Form Save Button Click
+     * @function
+     * @name handleSaveForm
+     * @param {Button} button - The button that was clicked
+     * @returns {void}
+     */
+    function handleSaveForm(button) {
+      createSpinner(button);
+      const row = button.closest('tr');
+      const id = getID(button);
+      const performance = row.querySelector('.performance-check');
+      const oneToOne = row.querySelector('.onetoOne-check');
+      const sideBySide = row.querySelector('.sideBySide-check');
+      const fields = [button, performance, oneToOne, sideBySide];
+      console.log(`Performance: ${performance.checked}, 1 to 1: ${oneToOne.checked}, Side by Side: ${sideBySide.checked}`);
+      console.log(fields);
+      fields.forEach(field => field.disabled = true);
+      google.script.run
+        .withSuccessHandler(() => {
+          createSaveIcon(button);
+          // Update the data-value attributes
+          performance.dataset.value = performance.checked.toString();
+          oneToOne.dataset.value = oneToOne.checked.toString();
+          sideBySide.dataset.value = sideBySide.checked.toString();
+          fields.forEach(field => field.disabled = false);
+          AlertBuilder.showToast(`Form ${id} saved successfully!`, 10000);
+          manageFormSaveButton(row);
+        })
+        .withFailureHandler((error) => {
+          // Re-enable fields
+          fields.forEach(field => field.disabled = false);
+          AlertBuilder.handleError(error);
+          createSaveIcon(button);
+        })
+        .saveForm(id, performance.checked, oneToOne.checked, sideBySide.checked);
+    }
+
+    /**
+     * Creates the save icon for the button.
+     * @function
+     * @name createSaveIcon
+     * @param {Element} buttonElement - The button element.
+     * @returns {void}
+     */
+    function createSaveIcon(buttonElement) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('height', '24');
+      svg.setAttribute('viewBox', '0 -960 960 960');
+      svg.setAttribute('width', '24');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M819.999-671.538v459.229q0 30.308-21 51.308t-51.308 21H212.309q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h459.229l148.461 148.461ZM760-646 646-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v535.382q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h535.382q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847V-646ZM480-269.233q41.538 0 70.768-29.23 29.231-29.231 29.231-70.768 0-41.538-29.231-70.769-29.23-29.23-70.768-29.23T409.232-440q-29.231 29.231-29.231 70.769 0 41.537 29.231 70.768 29.23 29.23 70.768 29.23ZM255.386-564.616h328.459v-139.998H255.386v139.998ZM200-646V-200-760v114Z');
+      svg.appendChild(path);
+      buttonElement.innerHTML = '';
+      buttonElement.appendChild(svg);
+    }
+
+    /**
+     * Creates the trash icon for the button.
+     * @function
+     * @name createTrashIcon
+     * @param {Element} buttonElement - The button element.
+     * @returns {void}
+     */
+    function createTrashIcon(buttonElement) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('height', '24');
+      svg.setAttribute('viewBox', '0 -960 960 960');
+      svg.setAttribute('width', '24');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M292.309-140.001q-29.923 0-51.115-21.193-21.193-21.192-21.193-51.115V-720h-40v-59.999H360v-35.384h240v35.384h179.999V-720h-40v507.691q0 30.308-21 51.308t-51.308 21H292.309ZM680-720H280v507.691q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h375.382q4.616 0 8.463-3.846 3.846-3.847 3.846-8.463V-720ZM376.155-280h59.999v-360h-59.999v360Zm147.691 0h59.999v-360h-59.999v360ZM280-720v520-520Z');
+      svg.appendChild(path);
+      buttonElement.innerHTML = '';
+      buttonElement.appendChild(svg);
+    }
+
+    /**
+     * Creates the spinner for the button.
+     * @function
+     * @name createSpinner
+     * @param {Element} buttonElement - The button element.
+     * @returns {void}
+     */
+    function createSpinner(buttonElement) {
+      const spinner = document.createElement('span');
+      spinner.classList.add('spinner-border', 'spinner-border-sm');
+      spinner.setAttribute('role', 'status'); //Using the setAttribute function is more readable and a best practice
+      buttonElement.innerHTML = '';
+      buttonElement.appendChild(spinner);
+    }
+
+    /**
+     * Handles Delete Form Button Click
+     * @function
+     * @name handleDeleteForm
+     * @param {Button} button - The button that was clicked
+     * @returns {void}
+     */
+    function handleDeleteForm(button) {
+      createSpinner(button);
+      try {
+        const formId = getID(button);
+        google.script.run
+          .withSuccessHandler(() => {
+            AlertBuilder.showToast(`Form ${formId} deleted successfully!`, 10000);
+            formsClickHandler();
+          })
+          .withFailureHandler((error) => {
+            createTrashIcon(button);
+            AlertBuilder.handleError(error);
+          })
+          .removeForm(formId);
+      }
+      catch (error) {
+        throw `handleDeleteForm -> ${error}`;
+      }
+    }
+
+    /**
+     * Handles the hidden checkbox change event.
+     *
+     * @function
+     * @name handleHiddenCheckbox
+     * @param {Event} event - The change event.
+     * @returns {void}
+     */
+    function handleCheckbox(checkbox) {
+      try {
+        const questionId = getID(checkbox);
+        const row = checkbox.closest('tr');
+        if (checkbox.classList.contains('hidden-check')) manageQuestionSaveButton(row);
+        if (checkbox.classList.contains('performance-check')) manageFormSaveButton(row);
+        if (checkbox.classList.contains('onetoOne-check')) manageFormSaveButton(row);
+        if (checkbox.classList.contains('sideBySide-check')) manageFormSaveButton(row);
+      } catch (error) {
+        throw `handleHiddenCheckbox -> ${error}`;
+      }
+    }
+
+    /**
+     * Manages the visibility of the save button for the question row.
+     * @function
+     * @name manageQuestionSaveButton
+     * @param {Element} row - The question row.
+     * @returns {void}
+     */
+    function manageQuestionSaveButton(row) {
+      const questionText = row.querySelector('.question-text');
+      const categorySelect = row.querySelector('.category-select');
+      const hiddenCheckbox = row.querySelector('.hidden-check');
+      const saveButton = row.querySelector('.save-question');
+      const shouldShowSaveButton = questionText.value !== questionText.dataset.value ||
+        categorySelect.value !== categorySelect.dataset.value ||
+        hiddenCheckbox.checked.toString() !== hiddenCheckbox.dataset.value;
+      saveButton.classList.toggle('d-none', !shouldShowSaveButton);
+    }
+
+    /**
+     * Manages the visibility of the save button for the form row.
+     * @function
+     * @name manageFormSaveButton
+     * @param {Element} row - The form row.
+     * @returns {void}
+     */
+    function manageFormSaveButton(row) {
+      const performanceCheckbox = row.querySelector('.performance-check');
+      const oneToOneCheckbox = row.querySelector('.onetoOne-check');
+      const sideBySideCheckbox = row.querySelector('.sideBySide-check');
+      const saveButton = row.querySelector('.save-form');
+      const deleteButton = row.querySelector('.delete-form');
+      const shouldShowSaveButton = performanceCheckbox.checked.toString() !== performanceCheckbox.dataset.value ||
+        oneToOneCheckbox.checked.toString() !== oneToOneCheckbox.dataset.value ||
+        sideBySideCheckbox.checked.toString() !== sideBySideCheckbox.dataset.value;
+      saveButton.classList.toggle('d-none', !shouldShowSaveButton);
+      deleteButton.classList.toggle('d-none', shouldShowSaveButton);
+    }
+
+    /**
+     * Gets the question ID from the question row.
+     * @function
+     * @name getID
+     * @param {Element} element - The element to get the question ID from.
+     * @returns {string} The question ID.
+     */
+    function getID(element) {
+      const row = element.closest('tr');
+      if (!row) throw new Error('Row not found');
+      const Id = row.dataset.id;
+      if (!Id) throw new Error('ID not found');
+      return Id;
+    }
+
+    /**
+     * Manages the visibility of the help text for the question input.
+     * @function
+     * @name manageQuestionInput
+     * @param {Element} questionInput - The question input.
+     * @returns {void}
+     */
+    function manageQuestionInput(questionInput) {
+      const row = questionInput.closest('tr');
+      const helpText = row.querySelector('.question-help-block');
+      const isInvalid = questionInput.value.length > 255;
+      helpText.classList.toggle('d-none', !isInvalid);
+      questionInput.classList.toggle('is-invalid', isInvalid);
+    }
+
+    /**
+     * Handles the click event on the table.
+     *
+     * @function
+     * @name handleTableClick
+     * @param {Event} event - The click event.
+     * @returns {void}
+     */
+    function handleTableClick(event) {
+      try {
+        const target = event.target;
+        const td = target.closest('td');
+        const button = target.closest('button');
+        if (td && td.classList.contains('question-toggle')) toggleQuestionRow(td);
+        if (button && button.classList.contains('save-question')) handleSaveQuestion(button);
+        if (button && button.classList.contains('save-form')) handleSaveForm(button);
+        if (button && button.classList.contains('delete-form')) handleDeleteForm(button);
+      } catch (error) {
+        console.log('Catch in handleTableClick');
+        AlertBuilder.handleError(error);
+      }
+    }
+
+    /**
+     * Handles the change event on the table.
+     *
+     * @function
+     * @name handleTableChange
+     * @param {Event} event - The change event.
+     * @returns {void}
+     */
+    function handleTableChange(event) {
+      try {
+        const target = event.target;
+        const select = target.closest('select');
+        if (target.type === 'checkbox') handleCheckbox(target);
+        if (target.type === 'select-one' && target.classList.contains('version-select')) filterQuestionRows(event);
+        if (target.type === 'select-one' && target.classList.contains('category-select')) manageQuestionSaveButton(target.closest('tr'));
+        if (target.type === 'text' && target.classList.contains('question-text')) manageQuestionSaveButton(target.closest('tr'));
+      } catch (error) {
+        console.log('Catch in handleTableChange');
+        AlertBuilder.handleError(error);
+      }
+    }
+
+    /**
+     * Handles the input event on the table.
+     * @function
+     * @name handleTableInput
+     * @param {Event} event - The input event.
+     * @returns {void}
+     */
+    function handleTableInput(event) {
+      try {
+        const target = event.target;
+        if (target.type === 'text' && target.classList.contains('question-text')) manageQuestionInput(target);
+      } catch (error) {
+        console.log('Catch in handleTableInput');
+        AlertBuilder.handleError(error);
+      }
+    }
+
+    /**
+     * Displays the Add Form popup
+     * @function
+     * @name showAddFormModal
+     * @param {Event} event - The click event.
+     * @returns {void}
+     */
+    function showAddFormModal(event) {
+      var modal = new bootstrap.Modal(document.getElementById('addFormModal'));
+      modal.show();
+    }
+
+    /**
+     * Handles the Add form link in popup
+     * @function
+     * @name addSelectedForm
+     * @param {Event} event - The click event.
+     * @returns {void}
+     */
+    function addSelectedForm(event) {
+      createSpinner(event.target);
+      const formSelect = document.getElementById("formSelect");
+      const addFormModal = document.getElementById("addFormModal");
+      formSelect.disabled = true;
+      const formID = formSelect.value;
+      google.script.run
+        .withSuccessHandler(() => {
+          formSelect.disabled = false;
+          addFormModal.querySelector('.btn-close').click();
+          AlertBuilder.showToast(`Form ${formID} added successfully!`, 10000);
+          formsClickHandler();
+        })
+        .withFailureHandler(() => {
+          formSelect.disabled = false;
+          event.target.innerHTML = 'Add Form';
+          AlertBuilder.handleError(new Error(`Error adding form ${formID}`));
+        })
+        .addForm(formID);
+    }
+
+
+    const table = document.getElementById('formTable');
+    const addButton = document.getElementById('add-button');
+    const addFormButton = document.getElementById('add-form-button');
+
+    table.addEventListener('click', handleTableClick);
+    table.addEventListener('change', handleTableChange);
+    table.addEventListener('input', handleTableInput);
+    addButton.addEventListener('click', showAddFormModal);
+    addFormButton.addEventListener('click', addSelectedForm);
+  });
+</script>
