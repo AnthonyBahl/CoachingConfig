@@ -24,7 +24,9 @@ async function updateQuestion(id, text, category, hidden) {
     if(text === undefined) throw new Error('Missing Question Text');
     if(category === undefined) throw new Error('Missing Question Category');
     if(hidden === undefined) throw new Error('Missing Hidden Checkbox Value');
-    return await _updateQuestion(id, text, category, hidden);
+    id = parseInt(id);
+    const existingQuestion = await validateValue('Question ID', id);
+    return existingQuestion ? await _updateQuestion(id, text, category, hidden) : await _addQuestion(id, text, category, hidden);
 }
 
 /**

@@ -11,6 +11,11 @@ const entities = {
   '&#34;': { regex: /&#34;/g, value: '"' }
 };
 
+const SVG_ICONS = {
+  SAVE: 'M819.999-671.538v459.229q0 30.308-21 51.308t-51.308 21H212.309q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h459.229l148.461 148.461ZM760-646 646-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v535.382q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h535.382q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847V-646ZM480-269.233q41.538 0 70.768-29.23 29.231-29.231 29.231-70.768 0-41.538-29.231-70.769-29.23-29.23-70.768-29.23T409.232-440q-29.231 29.231-29.231 70.769 0 41.537 29.231 70.768 29.23 29.23 70.768 29.23ZM255.386-564.616h328.459v-139.998H255.386v139.998ZM200-646V-200-760v114Z',
+  DELETE: 'M292.309-140.001q-29.923 0-51.115-21.193-21.193-21.192-21.193-51.115V-720h-40v-59.999H360v-35.384h240v35.384h179.999V-720h-40v507.691q0 30.308-21 51.308t-51.308 21H292.309ZM680-720H280v507.691q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h375.382q4.616 0 8.463-3.846 3.846-3.847 3.846-8.463V-720ZM376.155-280h59.999v-360h-59.999v360Zm147.691 0h59.999v-360h-59.999v360ZM280-720v520-520Z'
+};
+
 /**
  * Decodes HTML entities in a given input string.
  * @param {string} input - The input string to decode.
@@ -112,20 +117,19 @@ function generateQuestionRows(questions, questionCategories, isEditor, currentVe
     <tr class="${rowClass} question" data-id="${question.id}" data-version-id="${question.version}">
       <td class="col-6">
         ${isEditor ? `
-        <input type="text" class="form-control question-text" data-value="${questionText}" value="${questionText}"${question.type === 'Agent Name Validation' ? ' disabled' : ''}>
-        <small class="form-text text-muted text-danger question-help-block d-none">
-          Questions are limited to 255 characters.
-        </small>
+          <input type="text" class="form-control question-text" data-value="${questionText}" value="${questionText}"${question.type === 'Agent Name Validation' ? ' disabled' : ''}>
+          <small class="form-text text-muted text-danger question-help-block d-none">
+            Questions are limited to 255 characters.
+          </small>
         ` : questionText}
       </td>
       <td class="col-2 text-center align-middle">${question.type}</td>
-      <td class="col-2 text-center align-middle">${isEditor && question.type !== 'Agent Name Validation' ? `
-        <select class="form-select category-select" data-value="${question.category}">
-          <option></option>
-          ${questionCategories.map(category =>
-          `<option ${category === question.category ? 'selected' : ''}>${category}</option>`
-          )}
-        </select>` : isEditor ? question.type : question.category ? question.category : ''}
+      <td class="col-2 text-center align-middle">
+        ${isEditor && question.type !== 'Agent Name Validation' ? `
+          <select class="form-select category-select" data-value="${question.category}">
+            ${generateOptions(questionCategories, question.category)}
+          </select>` : isEditor ? question.type : question.category ? question.category : ''
+        }
       </td>
       <td class="text-center">
         ${generateCheckbox(question.hidden || question.type === 'Agent Name Validation',
@@ -133,11 +137,7 @@ function generateQuestionRows(questions, questionCategories, isEditor, currentVe
                           'hidden-check')}
       </td>
       <td class="text-center">
-        <button class="btn btn-outline-success save-question d-none" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path d="M819.999-671.538v459.229q0 30.308-21 51.308t-51.308 21H212.309q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h459.229l148.461 148.461ZM760-646 646-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v535.382q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h535.382q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847V-646ZM480-269.233q41.538 0 70.768-29.23 29.231-29.231 29.231-70.768 0-41.538-29.231-70.769-29.23-29.23-70.768-29.23T409.232-440q-29.231 29.231-29.231 70.769 0 41.537 29.231 70.768 29.23 29.23 70.768 29.23ZM255.386-564.616h328.459v-139.998H255.386v139.998ZM200-646V-200-760v114Z"/>
-          </svg>
-        </button>
+        ${generateButton('save-question', 'btn-outline-success', SVG_ICONS.SAVE, true)}
       </td>
     </tr>
   `;
@@ -174,17 +174,11 @@ function generateFormRows(formData, questionCategories, isEditor) {
       <td class="text-center">${generateCheckbox(form.performanceCoaching, isEditor, 'performance-check')}</td>
       <td class="text-center">${generateCheckbox(form.oneToOne, isEditor, 'onetoOne-check')}</td>
       <td class="text-center">${generateCheckbox(form.sideBySide, isEditor, 'sideBySide-check')}</td>
-      <td>${isEditor ? `
-        <button class="btn btn-outline-danger delete-form">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path class="path-danger" d="M292.309-140.001q-29.923 0-51.115-21.193-21.193-21.192-21.193-51.115V-720h-40v-59.999H360v-35.384h240v35.384h179.999V-720h-40v507.691q0 30.308-21 51.308t-51.308 21H292.309ZM680-720H280v507.691q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h375.382q4.616 0 8.463-3.846 3.846-3.847 3.846-8.463V-720ZM376.155-280h59.999v-360h-59.999v360Zm147.691 0h59.999v-360h-59.999v360ZM280-720v520-520Z"/>
-          </svg>
-        </button>
-        <button class="btn btn-outline-success save-form d-none" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path d="M819.999-671.538v459.229q0 30.308-21 51.308t-51.308 21H212.309q-30.308 0-51.308-21t-21-51.308v-535.382q0-30.308 21-51.308t51.308-21h459.229l148.461 148.461ZM760-646 646-760H212.309q-5.385 0-8.847 3.462-3.462 3.462-3.462 8.847v535.382q0 5.385 3.462 8.847 3.462 3.462 8.847 3.462h535.382q5.385 0 8.847-3.462 3.462-3.462 3.462-8.847V-646ZM480-269.233q41.538 0 70.768-29.23 29.231-29.231 29.231-70.768 0-41.538-29.231-70.769-29.23-29.23-70.768-29.23T409.232-440q-29.231 29.231-29.231 70.769 0 41.537 29.231 70.768 29.23 29.23 70.768 29.23ZM255.386-564.616h328.459v-139.998H255.386v139.998ZM200-646V-200-760v114Z"/>
-          </svg>
-        </button>` : ''}
+      <td>
+        ${isEditor ? `
+          ${generateButton('delete-form', 'btn-outline-danger', SVG_ICONS.DELETE, false)}
+          ${generateButton('save-form', 'btn-outline-success', SVG_ICONS.SAVE, true)}
+        ` : ''}
       </td>
     </tr>
     <tr class="question-row d-none" data-form-id="${form.id}">
@@ -199,9 +193,7 @@ function generateFormRows(formData, questionCategories, isEditor) {
                 <th class="text-center align-middle">${isEditor ? `Actions` : ''}</th>
               </tr>
           </thead>
-          <tbody>
-            ${generateQuestionRows(form.questions, questionCategories, isEditor, currentVersion)}
-          </tbody>
+          <tbody>${generateQuestionRows(form.questions, questionCategories, isEditor, currentVersion)}</tbody>
           <tfoot><tr class="table-secondary"><td colspan="4"></td></tr></tfoot>
         </table>
       </td>
@@ -228,6 +220,27 @@ function generateCheckbox(value, enabled, name) {
   checkbox = checkbox.replace('{status}', value ? ' checked' : '');
   checkbox = checkbox.replace('{enabled}', enabled ? '' : ' disabled');
   return checkbox;
+}
+
+/**
+ * Generates a button with the given name, style, path, and hidden status.
+ * @param {string} name - The name of the button.
+ * @param {string} style - The style of the button.
+ * @param {string} path - The path of the SVG icon to be displayed on the button.
+ * @param {boolean} hidden - Whether the button should be hidden or not.
+ * @returns {string} - The HTML code for the generated button.
+ */
+function generateButton(name, style, path, hidden) {
+  let button = `
+  <button class="btn {style} {name} ${hidden ? 'd-none' : ''}">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+      <path d="{path}"/>
+    </svg>
+  </button>`
+  button = button.replace('{name}', name);
+  button = button.replace('{style}', style);
+  button = button.replace('{path}', path);
+  return button;
 }
 
 /**

@@ -35,6 +35,17 @@ const FORMS_DB = {
     ROW_SPAN: 1,
     COL_SPAN: 3
 };
+const QUESTIONS_DB = {
+    SHEET_NAME: 'questions',
+    HEADER_ROWS: 1,
+    ID_COL: 3,
+    FORM_ID_COL: 1,
+    VERSION_COL: 2,
+    RANK_COL: 4,
+    QUESTION_TYPE_COL: 5,
+    ROW_SPAN: 1,
+    COL_SPAN: 3
+}
 
 /**
  * Returns the ID of the current user based on their email address.
@@ -152,6 +163,23 @@ function _getFormIDs() {
 }
 
 /**
+ * Returns the form ID associated with the given question ID.
+ * @param {string} questionID - The ID of the question to retrieve the form ID for.
+ * @returns {string} The form ID associated with the given question ID.
+ */
+function _getFormID(questionID) {
+    return _withLock(() => {
+        const sheet = _getSheet(QUESTIONS_DB.SHEET_NAME);
+        // Find row with question ID
+        const IDs = sheet.getRange(QUESTIONS_DB.HEADER_ROWS + 1, QUESTIONS_DB.ID_COL, sheet.getLastRow() - QUESTIONS_DB.HEADER_ROWS).getValues().map(row => row[0]);
+        const row = IDs.indexOf(questionID) + QUESTIONS_DB.HEADER_ROWS + 1;
+        // Get form ID from row
+        const formID = sheet.getRange(row, QUESTIONS_DB.FORM_ID_COL).getValue();
+        return formID;
+    });
+}
+
+/**
  * Updates a coaching question in the database.
  * @param {number} questionId - The ID of the question to update.
  * @param {string} text - The text of the question.
@@ -250,6 +278,28 @@ async function _addForm(formId) {
         const newRow = [parsedFormId, name, false, false, false, _getCurrentUserID(), Utilities.formatDate(new Date(), 'EST', 'yyyy-MM-dd')];
         const targetSheet = _getSheet(FORMS.SHEET_NAME);
         targetSheet.appendRow(newRow);
+    });
+}
+
+async function _addQuestion(questionId, text, category, hidden) {
+    // Ensure all parameters are correct data types
+    questionId = parseInt(questionId);
+    text = text.toString();
+    category = category.toString();
+    hidden = Boolean(hidden);    
+    const sheet = await _getSheet(QUESTIONS.SHEET_NAME);
+    const formId = await _getFormID(questionId);
+    const updatedBy = await _getCurrentUserID();
+    return new Promise((resolve, reject) => {
+        if (!validateValue('Question Text', text)) throw new Error('Invalid Question Text');
+        if (!validateValue('Question Category', category)) throw new Error('Invalid Question Category');
+        if (!validateValue('Checkbox', hidden)) throw new Error('Invalid Hidden Checkbox Value');
+        _withLock(() => {
+            const updatedOn = Utilities.formatDate(new Date(), 'EST', 'yyyy-MM-dd');
+            const newRow = [questionId, formId, text, category, hidden, updatedBy, updatedOn];
+            sheet.appendRow(newRow);
+            resolve();
+        });
     });
 }
 
